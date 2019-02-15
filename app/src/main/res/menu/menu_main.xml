@@ -1,0 +1,31 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.pantrymate.MainActivity">
+    <item
+        android:id="@+id/Home"
+        android:orderInCategory="100"
+        android:title="@string/HomePage"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/Manual"
+        android:orderInCategory="100"
+        android:title="@string/Manual_Entry"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/Camera"
+        android:orderInCategory="100"
+        android:title="@string/Camera"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/Barcode"
+        android:orderInCategory="100"
+        android:title="@string/Barcode"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/Help"
+        android:orderInCategory="100"
+        android:title="@string/Help"
+        app:showAsAction="never" />
+</menu>

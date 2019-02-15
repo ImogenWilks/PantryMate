@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">PantryMate</string>
+    <string name="Manual_Entry">Edit Pantry</string>
+    <string name="Camera">Camera</string>
+    <string name="HomePage">Home</string>
+    <string name="Barcode">Barcode Scanner</string>
+    <string name="Help">Help</string>
+    <string name="title_activity_edit">Edit</string>
+    <string name="title_activity_camera">Camera</string>
+    <string name="title_activity_barcode">barcode</string>
+
+</resources>
