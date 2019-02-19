@@ -12,14 +12,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toolbar.OnMenuItemClickListener;
+import android.widget.Button;
+
 
 import java.util.ArrayList;
+
+import java.util.List;
+import database.DBPantry;
+import database.DatabaseHelper;
 
 public class Edit extends AppCompatActivity {
 
     private RecyclerView nRecyclerView;
     private RecyclerView.Adapter nAdapter;
     private RecyclerView.LayoutManager nlayoutManager;
+    private Button addBut, editBut;
+    private DatabaseHelper db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +45,28 @@ public class Edit extends AppCompatActivity {
         nAdapter= new Adapter(itemList);
         nRecyclerView.setLayoutManager(nlayoutManager);
         nRecyclerView.setAdapter(nAdapter);
+        db = new DatabaseHelper(this);
 
+        addBut  = (Button) findViewById(R.id.addItem);
+        addBut.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                addItem("Banana", "19/2/15", 4);
+            }
+        });
+        /*
+        editBut  = (Button) findViewById(R.id.editItem);
+        editBut.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getPantry();
+            }
+        });
+        */
     }
 
     @Override
@@ -72,5 +102,19 @@ public class Edit extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void addItem(String foodName, String expiry, int amount)
+    {
+        long id = db.insertFood(foodName, expiry, amount);
+        System.out.print(id);
+    }
+
+    private void getPantry()
+    {
+        List <DBPantry> pantryList = db.fetchPantryAll();
+
+    }
+
+
 }
 
