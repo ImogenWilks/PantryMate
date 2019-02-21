@@ -29,13 +29,13 @@ public class Edit extends AppCompatActivity {
     private Button addBut, editBut, removeBut;
     private DatabaseHelper db;
     ArrayList<Items> itemList = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //db is the database helper object
         db = new DatabaseHelper(this);
 
         itemList = getPantry();
@@ -54,10 +54,10 @@ public class Edit extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                addItem("Banana", "19/2/15", 4);
+                //pass food name, expiry and amount. Date added auto generated using sql
+                addItem("Carrot", "19/2/15", 4);
                 itemList = updateList(getPantry());
 
-               // getPantry(itemList);
             }
         });
 
@@ -67,6 +67,7 @@ public class Edit extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
+                //Pass updated food details, pass pantry.getVariableName() for any not to be updated (e.g. updating food pass food name, but leave amount)
                 updateFood("Burger","12/4/45", 34, "Banana", "2019-02-21 11:48:17" );
                 itemList = updateList(getPantry());
                // getPantry();
@@ -78,9 +79,9 @@ public class Edit extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                removeItem("Burger", "2019-02-21 11:48:17");
-                itemList = updateList(getPantry());
-                // getPantry();
+                //Pass food name and date added
+                removeItem("FOOD NAME", "2019-02-21 11:48:17");
+                itemList = updateList(getPantry());;
             }
         });
 
@@ -132,7 +133,7 @@ public class Edit extends AppCompatActivity {
     {
         ArrayList<Items> itemList = new ArrayList<>();
         // returns a list of the pantry
-        // use pantryname[x].getVariableName() to get values from the list
+        // use pantryList[x].getVariableName() to get values from the list
         List <DBPantry> pantryList = db.fetchPantryAll();
 
         for(DBPantry tempPantry : pantryList)
@@ -145,7 +146,7 @@ public class Edit extends AppCompatActivity {
     }
     private ArrayList<Items> updateList(ArrayList<Items> oldList)
     {
-        // updates the list recyclerview with  any changes (additions, removals, edits etc)
+        // updates the list recyclerview with  any changes (additions, removals, edits etc).
         if (oldList != null && oldList.size() > 0) {
             itemList.clear();
             itemList.addAll(oldList);
