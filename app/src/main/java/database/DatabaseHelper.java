@@ -73,4 +73,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return pantryList;
     }
+
+    public void  updateFood(DBPantry updatedPantry, String oldFoodName, String dateAdded)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues updatedValues = new ContentValues();
+        updatedValues.put(DBPantry.COLUMN_FOODNAME, updatedPantry.getName());
+        updatedValues.put(DBPantry.COLUMN_AMOUNT, updatedPantry.getAmount());
+        updatedValues.put(DBPantry.COLUMN_EXPIRY, updatedPantry.getDateExpiry());
+
+          db.update(DBPantry.TABLENAME, updatedValues, DBPantry.COLUMN_FOODNAME + " = ? AND " + DBPantry.COLUMN_DATEADDED + " = ?", new String[]{oldFoodName, dateAdded});
+          db.close();
+
+
+    }
+
+    public void deleteFood(String foodName, String dateAdded)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(DBPantry.TABLENAME, DBPantry.COLUMN_FOODNAME + " = ? AND " + DBPantry.COLUMN_DATEADDED + " = ?", new String[]{foodName, dateAdded});
+    }
 }
