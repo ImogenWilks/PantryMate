@@ -122,10 +122,9 @@ public class Edit extends AppCompatActivity {
 
     private void addItem(String foodName, String expiry, int amount)
     {
-        long id = db.insertFood(foodName, expiry, amount);
+        // inserts an item into the table
+        db.insertFood(foodName, expiry, amount);
 
-
-        System.out.print(id);
 
     }
 
@@ -133,19 +132,20 @@ public class Edit extends AppCompatActivity {
     {
         ArrayList<Items> itemList = new ArrayList<>();
         // returns a list of the pantry
-        // use pantryname[x].getValue() to get values from the list (replace Value with variable name)
+        // use pantryname[x].getVariableName() to get values from the list
         List <DBPantry> pantryList = db.fetchPantryAll();
 
         for(DBPantry tempPantry : pantryList)
         {
-            System.out.println(tempPantry.getName() + " | " + tempPantry.getDateExpiry() + " | " + tempPantry.getAmount());
-            itemList.add(new Items(tempPantry.getName(), Integer.toString(tempPantry.getAmount())));
+            // adds the new food item to the item list
+            itemList.add(new Items(tempPantry.getName(),  "Expires: " + tempPantry.getDateExpiry(),"Amount: " + Integer.toString(tempPantry.getAmount())));
         }
 
         return itemList;
     }
     private ArrayList<Items> updateList(ArrayList<Items> oldList)
     {
+        // updates the list recyclerview with  any changes (additions, removals, edits etc)
         if (oldList != null && oldList.size() > 0) {
             itemList.clear();
             itemList.addAll(oldList);
@@ -156,8 +156,8 @@ public class Edit extends AppCompatActivity {
     }
     private void updateFood(String updatedFoodName, String updatedExpiry, int updatedAmount, String oldFoodName, String dateAdded)
     {
+        // pass the new variable edits along with its old food name and the date it was added
         DBPantry tempPantry = new DBPantry();
-        System.out.println("test");
 
         //put updated values here
         tempPantry.setName(updatedFoodName);
@@ -168,6 +168,7 @@ public class Edit extends AppCompatActivity {
 
     private void removeItem(String foodName, String dateAdded)
     {
+        //removes the item from the table, pass food name and dateadded
         db.deleteFood(foodName, dateAdded);
     }
 }
