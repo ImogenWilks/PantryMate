@@ -26,13 +26,26 @@
             android:id="@+id/Text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date added / expiry info"
+            android:text="Expiry"
             android:textSize="15sp"
-            android:layout_below="@id/Text1"
-            android:layout_marginStart="8dp"
+
+            android:layout_below="@+id/Text1"
+            android:gravity="bottom"
 
             />
 
+        <TextView
+            android:id="@+id/Text3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Amount"
+            android:textSize="15sp"
+            android:layout_alignRight="@id/Text1"
+            android:gravity="right
+"
+
+
+            />
 
     </RelativeLayout>
 
