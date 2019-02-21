@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
@@ -13,11 +15,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
     public static class viewHolder extends RecyclerView.ViewHolder{
         public TextView nTextView1;
         public TextView nTextView2;
+        public TextView nTextView3;
 
         public viewHolder(View itemView){
             super(itemView);
             nTextView1= itemView.findViewById(R.id.Text1);
             nTextView2= itemView.findViewById(R.id.Text2);
+            nTextView3= itemView.findViewById(R.id.Text3);
         }
     }
 
@@ -38,6 +42,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
         Items currentItem= nList.get(position);
         holder.nTextView1.setText(currentItem.getText1());
         holder.nTextView2.setText(currentItem.getText2());
+        holder.nTextView3.setText(currentItem.getText3());
     }
 
     @Override
