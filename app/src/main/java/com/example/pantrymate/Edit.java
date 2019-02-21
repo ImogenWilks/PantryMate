@@ -181,7 +181,7 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
 
     @Override
     public void addItems(String name, String quantity, String expiry) {
-        int intQuantity = Integer.parseInt(quantity);
+        int intQuantity = Integer.parseInt(quantity); //read in as string parsed to int
         addItem(name, expiry , intQuantity);
         itemList = updateList(getPantry());
     }
