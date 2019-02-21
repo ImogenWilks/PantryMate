@@ -18,13 +18,14 @@ public class DBPantry  {
     private String dateExpiry;
     private int amount;
 
-
+    // NOT CURRENTLY USING A COMPOSITE PRIMARY KEY. NEED TO WORK OUT HOW TO DO EDIT WITH IT ENABLED
+    // FINAL PRODUCT WITH MULTIPLE TABLES WILL
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLENAME + "("
             + COLUMN_FOODNAME + " TEXT, "
             + COLUMN_DATEADDED + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
             + COLUMN_EXPIRY + " DATETIME, "
-            + COLUMN_AMOUNT + " INT, "
-            + "PRIMARY KEY (foodName, dateAdded)" + ")";
+            + COLUMN_AMOUNT + " INT "
+            + ")";
 
     public DBPantry(){};
     public DBPantry (String name, String added, String expiry, int amount)
