@@ -26,8 +26,9 @@ public class Edit extends AppCompatActivity {
     private RecyclerView nRecyclerView;
     private RecyclerView.Adapter nAdapter;
     private RecyclerView.LayoutManager nlayoutManager;
-    private Button addBut, editBut;
+    private Button addBut, editBut, removeBut;
     private DatabaseHelper db;
+    ArrayList<Items> itemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +36,17 @@ public class Edit extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        db = new DatabaseHelper(this);
 
-        ArrayList<Items> itemList = new ArrayList<>();
-        itemList.add(new Items("Apple", "Line 2"));
-        itemList.add(new Items("Grapes","test2"));
+        itemList = getPantry();
+
         nRecyclerView=findViewById(R.id.ListRecyclerView);
         nRecyclerView.setHasFixedSize(true);
         nlayoutManager= new LinearLayoutManager(this);
         nAdapter= new Adapter(itemList);
         nRecyclerView.setLayoutManager(nlayoutManager);
         nRecyclerView.setAdapter(nAdapter);
-        db = new DatabaseHelper(this);
+
 
         addBut  = (Button) findViewById(R.id.addItem);
         addBut.setOnClickListener(new View.OnClickListener()
@@ -54,19 +55,35 @@ public class Edit extends AppCompatActivity {
             public void onClick(View v)
             {
                 addItem("Banana", "19/2/15", 4);
+                itemList = updateList(getPantry());
+
+               // getPantry(itemList);
             }
         });
-        /*
+
         editBut  = (Button) findViewById(R.id.editItem);
         editBut.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                getPantry();
+                updateFood("Burger","12/4/45", 34, "Banana", "2019-02-21 11:48:17" );
+                itemList = updateList(getPantry());
+               // getPantry();
             }
         });
-        */
+       removeBut  = (Button) findViewById(R.id.removeItem);
+        removeBut.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                removeItem("Burger", "2019-02-21 11:48:17");
+                itemList = updateList(getPantry());
+                // getPantry();
+            }
+        });
+
     }
 
     @Override
@@ -106,15 +123,52 @@ public class Edit extends AppCompatActivity {
     private void addItem(String foodName, String expiry, int amount)
     {
         long id = db.insertFood(foodName, expiry, amount);
+
+
         System.out.print(id);
+
     }
 
-    private void getPantry()
+    private ArrayList<Items> getPantry()
     {
+        ArrayList<Items> itemList = new ArrayList<>();
+        // returns a list of the pantry
+        // use pantryname[x].getValue() to get values from the list (replace Value with variable name)
         List <DBPantry> pantryList = db.fetchPantryAll();
 
+        for(DBPantry tempPantry : pantryList)
+        {
+            System.out.println(tempPantry.getName() + " | " + tempPantry.getDateExpiry() + " | " + tempPantry.getAmount());
+            itemList.add(new Items(tempPantry.getName(), Integer.toString(tempPantry.getAmount())));
+        }
+
+        return itemList;
+    }
+    private ArrayList<Items> updateList(ArrayList<Items> oldList)
+    {
+        if (oldList != null && oldList.size() > 0) {
+            itemList.clear();
+            itemList.addAll(oldList);
+            nAdapter.notifyDataSetChanged();
+        }
+        return itemList;
+
+    }
+    private void updateFood(String updatedFoodName, String updatedExpiry, int updatedAmount, String oldFoodName, String dateAdded)
+    {
+        DBPantry tempPantry = new DBPantry();
+        System.out.println("test");
+
+        //put updated values here
+        tempPantry.setName(updatedFoodName);
+        tempPantry.setDateExpiry(updatedExpiry);
+        tempPantry.setAmount(updatedAmount);
+        db.updateFood(tempPantry, oldFoodName, dateAdded);
     }
 
-
+    private void removeItem(String foodName, String dateAdded)
+    {
+        db.deleteFood(foodName, dateAdded);
+    }
 }
 
