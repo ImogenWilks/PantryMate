@@ -145,7 +145,7 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
 
         for (DBPantry tempPantry : pantryList) {
             // adds the new food item to the item list
-            itemList.add(new Items(tempPantry.getName(), "Expires: " + tempPantry.getDateExpiry(), "Amount: " + Integer.toString(tempPantry.getAmount())));
+            itemList.add(new Items(tempPantry.getName(), "Expires: " + tempPantry.getDateExpiry(), "Amount: " + Integer.toString(tempPantry.getAmount()), tempPantry.getDateAdded()));
         }
 
         return itemList;

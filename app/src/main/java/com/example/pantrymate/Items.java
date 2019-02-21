@@ -4,13 +4,15 @@ public class Items {
     private String itemName;
     private String itemInfo;
     private String expiryT;
+    private String dateAdded;
 
 
-    public Items(String text1, String text2, String text3)
+    public Items(String text1, String text2, String text3, String text4)
     {
         itemName=text1;
         expiryT=text2;
         itemInfo = text3;
+        dateAdded = text4;
 
 
     }
@@ -28,4 +30,5 @@ public class Items {
     {
         return itemInfo;
     }
+    public String getDateAdded() {return dateAdded;}
 }
