@@ -2,13 +2,13 @@ package com.example.pantrymate;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+
+import com.example.pantrymate.codeScanner.CodeScannerActivity;
 
 public class barcode extends AppCompatActivity {
 
@@ -16,6 +16,8 @@ public class barcode extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode);
+        findViewById(R.id.code_scanner)
+                .setOnClickListener(v -> startActivity(new Intent(this, CodeScannerActivity.class)));
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
