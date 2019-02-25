@@ -1,7 +1,12 @@
 package com.example.pantrymate;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +15,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.*;
+
 public class Camera extends AppCompatActivity {
+
+    int REQUEST_IMAGE_CAPTURE = 1;
+    Bitmap image = null;
+    int port = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +38,7 @@ public class Camera extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        testCamera();
     }
 
     @Override
@@ -28,6 +47,80 @@ public class Camera extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    public void testCamera()
+    {
+        //Opens the camera in the app
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    //Called when the capture button is pressed
+    public void onCapturePressed(View view)
+    {
+        testCamera();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+        {
+            //Stores the image taken in a variable
+            image = (Bitmap) data.getExtras().get("data");
+            try
+            {
+                //Starts a new thread to send the image to the server
+                new AsyncTask<Void,Void,Void>(){
+
+                    @Override
+                    protected Void doInBackground(Void ...params) {
+                        try
+                        {sendNetworkDataTest(image);}
+                        catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                }.execute();
+
+                //Stores the image to a file on the phone
+                File f = new File(Environment.getExternalStorageDirectory().toString(), "Test.png");
+                FileOutputStream out = new FileOutputStream(f);
+                image.compress(Bitmap.CompressFormat.PNG, 100, out);
+                out.flush();
+                out.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void sendNetworkDataTest(Bitmap img) throws IOException
+    {
+        //Connects to the server
+        Socket s = new Socket("192.168.0.10",port);
+
+
+        DataOutputStream outToServer = new DataOutputStream(s.getOutputStream());
+
+        //Stores the image as an array of bytes
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        img.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        //Sends the size of the image in bytes to the server
+        outToServer.writeInt(stream.size());
+        //Sends the image data to the server
+        outToServer.write(byteArray);
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
@@ -56,3 +149,4 @@ public class Camera extends AppCompatActivity {
         }
     }
 }
+
