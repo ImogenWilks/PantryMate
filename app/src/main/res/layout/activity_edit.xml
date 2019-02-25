@@ -8,45 +8,37 @@
 
 
     <include layout="@layout/toolbar"/>
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/topLayout"
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:weightSum="3">
+        android:padding="15dp"
+        >
+
         <Button
             android:id="@+id/addItem"
-            android:layout_width="match_parent"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:text="Add"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
             android:background="@drawable/button_format"
-            android:layout_weight="1"
-            />
+            android:text="+"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp"
+            android:layout_alignParentLeft="true"/>
         <Button
-            android:id="@+id/editItem"
-            android:layout_width="match_parent"
+            android:id="@+id/instructions"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:text="Edit"
+            android:text="\?"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="25sp"
             android:background="@drawable/button_format"
-            android:layout_weight="1"
-            />
-        <Button
-            android:id="@+id/removeItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Remove"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:background="@drawable/button_format"
-            android:layout_weight="1"
+            android:layout_alignParentRight="true"
+
             />
 
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ListRecyclerView"

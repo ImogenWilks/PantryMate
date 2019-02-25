@@ -76,6 +76,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void  updateFood(DBPantry updatedPantry, String oldFoodName, String dateAdded)
     {
+        System.out.println("RAN");
+        System.out.println(updatedPantry.getName());
+        System.out.println(updatedPantry.getAmount());
+        System.out.println(updatedPantry.getDateExpiry());
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues updatedValues = new ContentValues();

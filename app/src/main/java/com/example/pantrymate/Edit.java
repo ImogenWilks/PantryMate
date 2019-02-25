@@ -1,13 +1,16 @@
 package com.example.pantrymate;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +31,7 @@ import database.DatabaseHelper;
 public class Edit extends AppCompatActivity implements AddDialogue.addDialogListener {
 
     private RecyclerView nRecyclerView;
-    private RecyclerView.Adapter nAdapter;
+    private Adapter nAdapter;
     private RecyclerView.LayoutManager nlayoutManager;
     private Button addBut, editBut, removeBut;
     private DatabaseHelper db;
@@ -54,40 +57,48 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
         nRecyclerView.setLayoutManager(nlayoutManager);
         nRecyclerView.setAdapter(nAdapter);
 
+        nAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                Intent i = new Intent(Edit.this, editCheck.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name",itemList.get(position).getText1());
+                bundle.putString("expiry",itemList.get(position).getText2());
+                bundle.putString("quantity",itemList.get(position).getText3());
+                bundle.putString("date",itemList.get(position).getDateAdded());
+                i.putExtras(bundle);
+                startActivity(i);
+
+            }
+        });
+
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT ) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder target, int i) {
+                int position = target.getAdapterPosition();
+                removeItem(itemList.get(position).getText1(),itemList.get(position).getDateAdded());
+                itemList.remove(position);
+                nAdapter.notifyDataSetChanged();
+
+            }
+        });
+        helper.attachToRecyclerView(nRecyclerView);
 
         addBut = (Button) findViewById(R.id.addItem);
         addBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDialog();
-                //pass food name, expiry and amount. Date added auto generated using sql
-                // addItem("Carrot", "19/2/15", 4);
-                //itemList = updateList(getPantry());
 
             }
         });
-
-        editBut = (Button) findViewById(R.id.editItem);
-        editBut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Pass updated food details, pass pantry.getVariableName() for any not to be updated (e.g. updating food pass food name, but leave amount)
-                updateFood("Burger", "12/4/45", 34, "Banana", "2019-02-21 11:48:17");
-                itemList = updateList(getPantry());
-                // getPantry();
-            }
-        });
-        removeBut = (Button) findViewById(R.id.removeItem);
-        removeBut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Pass food name and date added
-                removeItem("Carrot", "2019-02-21 11:48:17");
-                itemList = updateList(getPantry());
-                ;
-            }
-        });
-
+        
     }
 
     public void openDialog() {
@@ -95,6 +106,7 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
         addDialogue.show(getSupportFragmentManager(), "dialog");
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -145,7 +157,7 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
 
         for (DBPantry tempPantry : pantryList) {
             // adds the new food item to the item list
-            itemList.add(new Items(tempPantry.getName(), "Expires: " + tempPantry.getDateExpiry(), "Amount: " + Integer.toString(tempPantry.getAmount()), tempPantry.getDateAdded()));
+            itemList.add(new Items(tempPantry.getName(),tempPantry.getDateExpiry(),Integer.toString(tempPantry.getAmount()), tempPantry.getDateAdded()));
         }
 
         return itemList;
@@ -160,17 +172,6 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
         }
         return itemList;
 
-    }
-
-    private void updateFood(String updatedFoodName, String updatedExpiry, int updatedAmount, String oldFoodName, String dateAdded) {
-        // pass the new variable edits along with its old food name and the date it was added
-        DBPantry tempPantry = new DBPantry();
-
-        //put updated values here
-        tempPantry.setName(updatedFoodName);
-        tempPantry.setDateExpiry(updatedExpiry);
-        tempPantry.setAmount(updatedAmount);
-        db.updateFood(tempPantry, oldFoodName, dateAdded);
     }
 
     private void removeItem(String foodName, String dateAdded) {
