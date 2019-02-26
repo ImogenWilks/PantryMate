@@ -1,18 +1,15 @@
 package com.example.pantrymate;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.text.method.DialerKeyListener;
+import androidx.appcompat.app.AppCompatDialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import java.util.Calendar;
 
 public class AddDialogue extends AppCompatDialogFragment {
     private EditText itemName;
