@@ -8,12 +8,16 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.pantrymate.codeScanner.CodeScannerActivity;
+
 public class barcode extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_barcode);
+        findViewById(R.id.code_scanner)
+                .setOnClickListener(v -> startActivity(new Intent(this, CodeScannerActivity.class)));
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
