@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 
@@ -20,7 +21,7 @@ import java.util.List;
 import database.DBPantry;
 import database.DatabaseHelper;
 
-public class Edit extends AppCompatActivity implements AddDialogue.addDialogListener {
+public class Edit extends AppCompatActivity  {
 
     private RecyclerView nRecyclerView;
     private Adapter nAdapter;
@@ -59,6 +60,7 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
                 bundle.putString("expiry",itemList.get(position).getText2());
                 bundle.putString("quantity",itemList.get(position).getText3());
                 bundle.putString("date",itemList.get(position).getDateAdded());
+                bundle.putBoolean("Add",false);
                 i.putExtras(bundle);
                 startActivity(i);
 
@@ -86,19 +88,23 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
         addBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDialog();
+                //openDialog();
+
+                Intent i = new Intent(Edit.this, editCheck.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name","");
+                bundle.putString("expiry","");
+                bundle.putString("quantity","");
+                bundle.putString("date","");
+                bundle.putBoolean("Add",true);
+                i.putExtras(bundle);
+                startActivity(i);
+
 
             }
         });
         
     }
-
-    public void openDialog() {
-        AddDialogue addDialogue = new AddDialogue();
-        addDialogue.show(getSupportFragmentManager(), "dialog");
-
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,13 +140,6 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
         }
     }
 
-    private void addItem(String foodName, String expiry, int amount) {
-        // inserts an item into the table
-        db.insertFood(foodName, expiry, amount);
-
-
-    }
-
     private ArrayList<Items> getPantry() {
         ArrayList<Items> itemList = new ArrayList<>();
         // returns a list of the pantry
@@ -172,12 +171,7 @@ public class Edit extends AppCompatActivity implements AddDialogue.addDialogList
 
     }
 
-    @Override
-    public void addItems(String name, String quantity, String expiry) {
-        int intQuantity = Integer.parseInt(quantity); //read in as string parsed to int
-        addItem(name, expiry , intQuantity);
-        itemList = updateList(getPantry());
-    }
+
 }
 
 

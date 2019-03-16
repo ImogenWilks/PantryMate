@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 import database.DBPantry;
@@ -33,11 +37,16 @@ public class editCheck extends AppCompatActivity {
         setSupportActionBar(toolbar);
         db = new DatabaseHelper(this);
 
+
         Bundle bundle = getIntent().getExtras();
+
+
         final String name = bundle.getString("name");
         String expiry = bundle.getString("expiry");
         String quantity = bundle.getString("quantity");
         final String dateAdded = bundle.getString("date");
+        boolean add =bundle.getBoolean("Add");
+
 
         EditText cname = findViewById(R.id.changeName);
         EditText cexpiry = findViewById(R.id.changeExpiry);
@@ -63,8 +72,13 @@ public class editCheck extends AppCompatActivity {
 
                 Pair<Integer, Boolean> pair = validateChanges(changeName, changeExpiry, changeQuantity);
                 if (pair.second) {
-
-                    updateFood(changeName, changeExpiry, pair.first ,name, dateAdded);
+                    if (add)
+                    {
+                        addItem(changeName,changeExpiry,pair.first);
+                    }
+                    else {
+                        updateFood(changeName, changeExpiry, pair.first, name, dateAdded);
+                    }
 
                     Intent i = new Intent(editCheck.this, Edit.class);
                     startActivity(i);
@@ -78,25 +92,38 @@ public class editCheck extends AppCompatActivity {
     private Pair<Integer,Boolean> validateChanges(String updatedFoodName, String updatedExpiry, String updatedAmount){
         String errorMessage="";
         Pair<Integer, Boolean> pair;
+        Calendar calender = Calendar.getInstance();
+        calender.add(Calendar.DAY_OF_MONTH,-1);
+        Date todaysDate = calender.getTime();
+        Date date = new Date();
 
-        if (updatedFoodName.length()==0 || updatedExpiry.length()==0 || updatedAmount.length()==0){
-            errorMessage="Please do not leave any fields blank";
+        int intQuantity=0;
+
+        if (updatedAmount.length()>3){errorMessage="The item quantity can not exceed 999";}
+        else if  (updatedAmount.length()!=0) { intQuantity = Integer.parseInt(updatedAmount); }
+
+        if (updatedFoodName.length()==0 || updatedExpiry.length()==0 || updatedAmount.length()==0){ errorMessage="Please do not leave any fields blank"; }
+
+        else if (! Pattern.matches("^[A-Za-z]+$",updatedFoodName)) { errorMessage="Please only enter letters into the Name field"; }
+
+        else if (! Pattern.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/]\\d{4}$", updatedExpiry)){
+            errorMessage="Please enter the date in the format DD/MM/YYYY, including the forward slashes"; }
+
+        else {
+            try {
+                 date = new SimpleDateFormat("dd/MM/yyyy").parse(updatedExpiry);
+            }
+            catch(ParseException e){
+                e.printStackTrace();
+            }
         }
 
-        if (! Pattern.matches(".*[a-zA-Z]+.*",updatedFoodName)) {
-            errorMessage="Please only enter letters into the Name field";
-        }
-
-        if (! Pattern.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/]\\d{4}$", updatedExpiry)){
-            errorMessage="Please enter the date in the format DD/MM/YYYY, including the forward slashes";
-        }
+        if (todaysDate.after(date) && todaysDate.equals(date)==false)
+        { errorMessage="Please do not enter food that has already expired"; }
 
         if (errorMessage==""){
-            int intQuantity = Integer.parseInt(updatedAmount);
             pair = new Pair<>(intQuantity,true);
-
-            return pair ;
-        }
+            return pair ; }
 
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
         pair = new Pair<>(0,false);
@@ -106,8 +133,7 @@ public class editCheck extends AppCompatActivity {
     private void updateFood(String updatedFoodName, String updatedExpiry, int updatedAmount, String oldFoodName, String dateAdded) {
         // pass the new variable edits along with its old food name and the date it was added
         DBPantry tempPantry = new DBPantry();
-        //int intQuantity =  Integer.parseInt(updatedAmount);
-        //put updated values here
+
         tempPantry.setName(updatedFoodName);
         tempPantry.setDateExpiry(updatedExpiry);
         tempPantry.setAmount(updatedAmount);
@@ -115,7 +141,10 @@ public class editCheck extends AppCompatActivity {
         db.updateFood(tempPantry, oldFoodName, dateAdded);
     }
 
-
+    private void addItem(String foodName, String expiry, int amount) {
+        // inserts an item into the table
+        db.insertFood(foodName, expiry, amount);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

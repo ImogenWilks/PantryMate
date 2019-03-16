@@ -4,59 +4,124 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="60dp"
         android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="30dp"
+
+            >
+
+            <TextView
+                android:id="@+id/aboutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="ABOUT"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                />
 
             <TextView
                 android:id="@+id/helpIntro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
                 android:text="@string/helpIntro"
-                android:textAppearance="@style/TextAppearance.AppCompat" />
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/editTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16sp"
+                android:text="EDIT"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                />
 
             <TextView
                 android:id="@+id/helpEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
                 android:text="@string/helpEdit"
-                android:textAppearance="@style/TextAppearance.AppCompat" />
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:gravity="center"/>
 
+            <TextView
+                android:id="@+id/cameraTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="CAMERA"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                />
             <TextView
                 android:id="@+id/helpCamera"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/helpCamera"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/BarcodeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="BARCODE"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                />
             <TextView
                 android:id="@+id/helpBarcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/helpBarcode"
-                android:textAppearance="@style/TextAppearance.AppCompat" />
-
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/contactTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="CONTACT US"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                />
             <TextView
                 android:id="@+id/helpContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/helpContact"
-                android:textAppearance="@style/TextAppearance.AppCompat" />
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:gravity="center"/>
 
         </LinearLayout>
     </ScrollView>
