@@ -26,7 +26,7 @@ public class Edit extends AppCompatActivity  {
     private RecyclerView nRecyclerView;
     private Adapter nAdapter;
     private RecyclerView.LayoutManager nlayoutManager;
-    private Button addBut, editBut, removeBut;
+    private Button addBut, helpBut;
     private DatabaseHelper db;
 
     ArrayList<Items> itemList = new ArrayList<>();
@@ -84,11 +84,20 @@ public class Edit extends AppCompatActivity  {
         });
         helper.attachToRecyclerView(nRecyclerView);
 
+        helpBut= (Button) findViewById(R.id.instructions);
+        helpBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+
+            }
+        });
+
         addBut = (Button) findViewById(R.id.addItem);
         addBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //openDialog();
+
 
                 Intent i = new Intent(Edit.this, editCheck.class);
                 Bundle bundle = new Bundle();
@@ -104,6 +113,12 @@ public class Edit extends AppCompatActivity  {
             }
         });
         
+    }
+
+    public void openDialog() {
+        AddDialogue addDialogue = new AddDialogue();
+        addDialogue.show(getSupportFragmentManager(),"help");
+
     }
 
     @Override

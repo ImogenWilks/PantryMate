@@ -19,5 +19,7 @@
     <string name="helpCamera">Camera: Take a picture of your food items using your phone’s camera, and the app will add those items automatically to your pantry. For better results, make sure the room is well lit, the food items are spaced apart and that the packaging doesn’t obscure what the food looks like. (work in progress)</string>
     <string name="helpBarcode">Barcode: Use your phone camera to scan the barcode of your food items. The app will then add those items automatically to your pantry. (work in progress)</string>
     <string name="helpContact">Find a bug? Create an issue on our github page to let us know -  https://github.com/ImogenWilks/PantryMate/issues</string>
-
+    <string name="deleteExplain">To delete an item just swipe from right to left and watch it disappear!</string>
+    <string name="editExplain">To edit an item simply press on it in the pantry items list and a window will appear allowing you to edit the item\'s details.</string>
+    <string name="addExplain">In order to add an item simply click the + button to the left of the screen and fill in the details. After filling out the required fields simply press submit and the item will appear in your pantry.</string>
 </resources>
