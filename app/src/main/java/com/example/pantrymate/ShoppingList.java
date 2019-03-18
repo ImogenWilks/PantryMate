@@ -1,47 +1,44 @@
 package com.example.pantrymate;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import java.util.List;
-import database.DBPantry;
-import database.DatabaseHelper;
-
-public class Edit extends AppCompatActivity  {
+public class ShoppingList extends AppCompatActivity {
 
     private RecyclerView nRecyclerView;
     private Adapter nAdapter;
     private RecyclerView.LayoutManager nlayoutManager;
-    private Button addBut, helpBut;
-    private DatabaseHelper db;
-
     ArrayList<Items> itemList = new ArrayList<>();
+    Button addBut,helpBut;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_shopping_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //db is the database helper object
-        db = new DatabaseHelper(this);
 
-        itemList = getPantry();
+        itemList.add(new Items("Apple","N/A","2","TBA"));
 
         nRecyclerView = findViewById(R.id.ListRecyclerView);
         nRecyclerView.setHasFixedSize(true);
@@ -50,22 +47,26 @@ public class Edit extends AppCompatActivity  {
         nRecyclerView.setLayoutManager(nlayoutManager);
         nRecyclerView.setAdapter(nAdapter);
 
+
         nAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
 
-                Intent i = new Intent(Edit.this, editCheck.class);
+                Intent i = new Intent(ShoppingList.this, editCheck.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("name",itemList.get(position).getText1());
-                bundle.putString("expiry",itemList.get(position).getText2());
-                bundle.putString("quantity",itemList.get(position).getText3());
-                bundle.putString("date",itemList.get(position).getDateAdded());
-                bundle.putInt("Add",2);
+                bundle.putString("name", itemList.get(position).getText1());
+                bundle.putString("expiry", itemList.get(position).getText2());
+                bundle.putString("quantity", itemList.get(position).getText3());
+                bundle.putString("date", itemList.get(position).getDateAdded());
+                bundle.putInt("Add", 3);
                 i.putExtras(bundle);
                 startActivity(i);
-
             }
+
+
         });
+
+
 
         ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT ) {
             @Override
@@ -75,23 +76,37 @@ public class Edit extends AppCompatActivity  {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder target, int i) {
+
                 int position = target.getAdapterPosition();
-                removeItem(itemList.get(position).getText1(),itemList.get(position).getDateAdded());
                 itemList.remove(position);
                 nAdapter.notifyDataSetChanged();
+                Toast.makeText(ShoppingList.this, "Item removed from shopping list", Toast.LENGTH_SHORT).show();
 
             }
-        });
-        helper.attachToRecyclerView(nRecyclerView);
 
-        helpBut= (Button) findViewById(R.id.instructions);
-        helpBut.setOnClickListener(new View.OnClickListener() {
+        });
+
+        ItemTouchHelper helper2 = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT ) {
             @Override
-            public void onClick(View v) {
-                openDialog();
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder target, int i) {
+                int position = target.getAdapterPosition();
+                itemList.remove(position);
+                nAdapter.notifyDataSetChanged();
+                Toast.makeText(ShoppingList.this, "Item added to pantry", Toast.LENGTH_SHORT).show();
 
             }
+
         });
+
+
+
+        helper.attachToRecyclerView(nRecyclerView);
+        helper2.attachToRecyclerView(nRecyclerView);
 
         addBut = (Button) findViewById(R.id.addItem);
         addBut.setOnClickListener(new View.OnClickListener() {
@@ -99,28 +114,32 @@ public class Edit extends AppCompatActivity  {
             public void onClick(View v) {
 
 
-                Intent i = new Intent(Edit.this, editCheck.class);
+                Intent i = new Intent(ShoppingList.this, editCheck.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("name","");
-                bundle.putString("expiry","");
-                bundle.putString("quantity","");
-                bundle.putString("date","");
-                bundle.putInt("Add",1);
+                bundle.putString("name", "");
+                bundle.putString("expiry", "");
+                bundle.putString("quantity", "");
+                bundle.putString("date", "");
+                bundle.putInt("Add", 3);
                 i.putExtras(bundle);
                 startActivity(i);
 
-
             }
         });
-        
+
+
+        helpBut = (Button) findViewById(R.id.instructions);
+        helpBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {openDialog(); }
+        });
     }
 
     public void openDialog() {
-        AddDialogue addDialogue = new AddDialogue();
-        addDialogue.show(getSupportFragmentManager(),"help");
+        shopDialogue shopDialog = new shopDialogue();
+        shopDialog.show(getSupportFragmentManager(),"help");
 
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -155,38 +174,4 @@ public class Edit extends AppCompatActivity  {
         }
     }
 
-    private ArrayList<Items> getPantry() {
-        ArrayList<Items> itemList = new ArrayList<>();
-        // returns a list of the pantry
-        // use pantryList[x].getVariableName() to get values from the list
-        List<DBPantry> pantryList = db.fetchPantryAll();
-
-        for (DBPantry tempPantry : pantryList) {
-            // adds the new food item to the item list
-            itemList.add(new Items(tempPantry.getName(),tempPantry.getDateExpiry(),Integer.toString(tempPantry.getAmount()), tempPantry.getDateAdded()));
-        }
-
-        return itemList;
-    }
-
-    private ArrayList<Items> updateList(ArrayList<Items> oldList) {
-        // updates the list recyclerview with  any changes (additions, removals, edits etc).
-        if (oldList != null && oldList.size() > 0) {
-            itemList.clear();
-            itemList.addAll(oldList);
-            nAdapter.notifyDataSetChanged();
-        }
-        return itemList;
-
-    }
-
-    private void removeItem(String foodName, String dateAdded) {
-        //removes the item from the table, pass food name and dateadded
-        db.deleteFood(foodName, dateAdded);
-
-    }
-
-
 }
-
-

@@ -45,11 +45,12 @@ public class editCheck extends AppCompatActivity {
         String expiry = bundle.getString("expiry");
         String quantity = bundle.getString("quantity");
         final String dateAdded = bundle.getString("date");
-        boolean add =bundle.getBoolean("Add");
+        Integer add =bundle.getInt("Add");
 
 
         EditText cname = findViewById(R.id.changeName);
         EditText cexpiry = findViewById(R.id.changeExpiry);
+        if (add==3){ cexpiry.setEnabled(false);}
         EditText cquantity = findViewById(R.id.changeQuantity);
 
 
@@ -61,27 +62,36 @@ public class editCheck extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                String changeExpiry;
                 EditText newName = findViewById(R.id.changeName);
                 EditText newExpiry = findViewById(R.id.changeExpiry);
                 EditText newQuantity = findViewById(R.id.changeQuantity);
 
                 String changeName=newName.getText().toString();
-                String changeExpiry=newExpiry.getText().toString();
+
+                if (add==3){changeExpiry="N/A";}
+                else{ changeExpiry=newExpiry.getText().toString();}
                 String changeQuantity=newQuantity.getText().toString();
 
-                Pair<Integer, Boolean> pair = validateChanges(changeName, changeExpiry, changeQuantity);
+                Pair<Integer, Boolean> pair = validateChanges(changeName, changeExpiry, changeQuantity,add);
                 if (pair.second) {
-                    if (add)
+                    if (add==1)
                     {
                         addItem(changeName,changeExpiry,pair.first);
+                        Intent i = new Intent(editCheck.this, Edit.class);
+                        startActivity(i);
                     }
-                    else {
+                    else if (add==2) {
                         updateFood(changeName, changeExpiry, pair.first, name, dateAdded);
+                        Intent i = new Intent(editCheck.this, Edit.class);
+                        startActivity(i);
+                    }
+                    else{
+                        Intent i = new Intent(editCheck.this, ShoppingList.class);
+                        startActivity(i);
                     }
 
-                    Intent i = new Intent(editCheck.this, Edit.class);
-                    startActivity(i);
+
                 }
 
 
@@ -89,7 +99,7 @@ public class editCheck extends AppCompatActivity {
         });
     }
 
-    private Pair<Integer,Boolean> validateChanges(String updatedFoodName, String updatedExpiry, String updatedAmount){
+    private Pair<Integer,Boolean> validateChanges(String updatedFoodName, String updatedExpiry, String updatedAmount, Integer add){
         String errorMessage="";
         Pair<Integer, Boolean> pair;
         Calendar calender = Calendar.getInstance();
@@ -106,20 +116,23 @@ public class editCheck extends AppCompatActivity {
 
         else if (! Pattern.matches("^[A-Za-z]+$",updatedFoodName)) { errorMessage="Please only enter letters into the Name field"; }
 
-        else if (! Pattern.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/]\\d{4}$", updatedExpiry)){
-            errorMessage="Please enter the date in the format DD/MM/YYYY, including the forward slashes"; }
 
-        else {
-            try {
-                 date = new SimpleDateFormat("dd/MM/yyyy").parse(updatedExpiry);
+        if (add != 3) {
+            if (!Pattern.matches("^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/]\\d{4}$", updatedExpiry)) {
+                errorMessage = "Please enter the date in the format DD/MM/YYYY, including the forward slashes";
             }
-            catch(ParseException e){
-                e.printStackTrace();
+            else {
+                try {
+                    date = new SimpleDateFormat("dd/MM/yyyy").parse(updatedExpiry);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (todaysDate.after(date) && todaysDate.equals(date) == false) {
+                errorMessage = "Please do not enter food that has already expired";
             }
         }
-
-        if (todaysDate.after(date) && todaysDate.equals(date)==false)
-        { errorMessage="Please do not enter food that has already expired"; }
 
         if (errorMessage==""){
             pair = new Pair<>(intQuantity,true);
