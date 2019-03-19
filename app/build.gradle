@@ -38,4 +38,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'org.jetbrains:annotations:15.0'
+
+    //MLKit
+    //implementation 'com.google.firebase:firebase-core:16.0.1'
+    //implementation 'com.google.firebase:firebase-ml-vision:17.0.0'
+    //implementation 'com.google.firebase:firebase-ml-vision-image-label-model:15.0.0'
+    implementation 'com.google.firebase:firebase-ml-vision:19.0.2'
+    implementation 'com.google.firebase:firebase-ml-vision-image-label-model:17.0.2'
 }
+
+//MLKit
+apply plugin: 'com.google.gms.google-services'

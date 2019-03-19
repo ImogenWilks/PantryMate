@@ -1,5 +1,6 @@
 package com.example.pantrymate;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -9,20 +10,34 @@ import android.provider.MediaStore;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.io.OutputStreamWriter;
 import java.net.*;
+import java.util.List;
 
 public class Camera extends AppCompatActivity {
-
+    public String visionData;
     int REQUEST_IMAGE_CAPTURE = 1;
     Bitmap image = null;
     int port = 3000;
@@ -33,7 +48,8 @@ public class Camera extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        writeToFile("Is the file being written?", getApplicationContext());
+        Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
         testCamera();
     }
 
@@ -47,6 +63,8 @@ public class Camera extends AppCompatActivity {
     public void testCamera()
     {
         //Opens the camera in the app
+        //saveToFile("Testing file is getting written");
+        writeToFile("Is the file being written?", getApplicationContext());
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
     }
@@ -57,6 +75,108 @@ public class Camera extends AppCompatActivity {
         testCamera();
     }
 
+    void testVisionObjectDetection(Bitmap img)
+    {
+        //writeToFile("Is the function being called?", getApplicationContext());
+
+        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(img);
+
+        FirebaseVisionImageMetadata metadata = new FirebaseVisionImageMetadata.Builder()
+                .setWidth(480)   // 480x360 is typically sufficient for
+                .setHeight(360)  // image recognition
+                .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+                .setRotation(0)
+                .build();
+
+        FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance().getCloudImageLabeler();
+
+// Or, to set the minimum confidence required:
+// FirebaseVisionCloudImageLabelerOptions options =
+//     new FirebaseVisionCloudImageLabelerOptions.Builder()
+//         .setConfidenceThreshold(0.7f)
+//         .build();
+// FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance()
+//     .getCloudImageLabeler(options);
+
+        labeler.processImage(image)
+                .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
+                    @Override
+                    public void onSuccess(List<FirebaseVisionImageLabel> labels) {
+                        // Task completed successfully
+                        // ...
+                        String data = "";
+                        for (FirebaseVisionImageLabel label: labels) {
+                            String text = label.getText();
+                            String entityId = label.getEntityId();
+                            float confidence = label.getConfidence();
+                            data += "Text: " + text + ", entity: " + entityId + ", confidence: " + Float.toString(confidence) + "\n";
+                            //try
+                            //{
+                                //Connects to the server
+                                /*Socket s = new Socket("192.168.0.10",port);
+
+
+                                DataOutputStream outToServer = new DataOutputStream(s.getOutputStream());
+
+                                outToServer.writeUTF(data);
+                                //writeToFile(data, getApplicationContext());
+                                //Toast.makeText(camera, "Test", Toast.LENGTH_SHORT).show();
+                            //}
+                            //catch (IOException ex)
+                            //{
+
+                            //}*/
+                        }
+                        Camera.saveToFile(data);
+                        //Toast.makeText(this., "Test", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        // Task failed with an exception
+                        // ...
+                        writeToFile("something went wrong", getApplicationContext());
+                    }
+                });
+    }
+
+    private void writeToFile(String data, Context context) {
+        /*try {
+            File f = new File(Environment.getExternalStorageDirectory().toString(), "MLKITTest.txt");
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(f);
+            /*OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("MLKITTest.txt", Context.MODE_PRIVATE));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }*/
+
+
+    }
+
+    public static boolean saveToFile( String data){
+        try {
+            new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "Visontest.txt" ).mkdir();
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Visontest.txt");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(file,true);
+            fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
+
+            return true;
+        }  catch(FileNotFoundException ex) {
+           // Log.d(TAG, ex.getMessage());
+        }  catch(IOException ex) {
+           // Log.d(TAG, ex.getMessage());
+        }
+        return  false;
+
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -64,6 +184,7 @@ public class Camera extends AppCompatActivity {
         {
             //Stores the image taken in a variable
             image = (Bitmap) data.getExtras().get("data");
+
             try
             {
                 //Starts a new thread to send the image to the server
@@ -71,12 +192,16 @@ public class Camera extends AppCompatActivity {
 
                     @Override
                     protected Void doInBackground(Void ...params) {
-                        try
-                        {sendNetworkDataTest(image);}
+                        testVisionObjectDetection(image);
+                        /*try
+                        {
+
+                            //sendNetworkDataTest(image);
+                        }
                         catch (IOException e)
                         {
                             e.printStackTrace();
-                        }
+                        }*/
                         return null;
                     }
 
