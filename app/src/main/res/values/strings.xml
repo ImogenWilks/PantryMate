@@ -26,4 +26,5 @@
     <string name="shopAddExplain">"To add an item simply click the + button to the left of the screen and fill in the details. Don't worry about the expiry date, this will added when you scan or tick an item off your list!</string>
     <string name="shopRemoveExplain">To remove an item all you need to do is swipe from right to left!</string>
     <string name="shopTickExplain">To tick an item off your list you can either press the scan button and scan a valid barcode or you can simply double tap the item. After ticking off an item it will be automatically added to your pantry.</string>
+    <string name="title_activity_receipt">receipt</string>
 </resources>

@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private Button barcode;
     private Button help;
     private Button shopping;
+    private Button receipt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        receipt = (Button) findViewById(R.id.receiptBtn);
+        receipt.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                openReceipt();
+            }
+        });
+
 
     }
 
@@ -83,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
     }
     public void openHelp(){
         Intent intent = new Intent(this,Help.class);
+        startActivity(intent);
+    }
+
+    public void openReceipt(){
+        Intent intent = new Intent(this,receipt.class);
         startActivity(intent);
     }
 
