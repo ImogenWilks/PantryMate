@@ -33,6 +33,17 @@
         android:textSize="15sp"
         tools:text="Code format"/>
 
+    <TextView
+        android:id="@+id/jsonParse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
+        android:maxLines="2"
+        android:textColor="#ff777777"
+        android:textSize="15sp"
+        android:hint="Product name"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

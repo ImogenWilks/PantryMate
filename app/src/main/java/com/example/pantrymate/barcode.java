@@ -7,8 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.pantrymate.codeScanner.CodeScannerActivity;
+
+import org.w3c.dom.Text;
 
 public class barcode extends AppCompatActivity {
 
