@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,11 +27,14 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 
 import java.io.OutputStreamWriter;
@@ -41,16 +46,37 @@ public class Camera extends AppCompatActivity {
     int REQUEST_IMAGE_CAPTURE = 1;
     Bitmap image = null;
     int port = 3000;
+    EditText itemListTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        itemListTextView = (EditText) findViewById(R.id.itemListTextView);
         setContentView(R.layout.activity_camera);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        writeToFile("Is the file being written?", getApplicationContext());
-        Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
-        testCamera();
+        //Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
+        //testCamera();
+
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        /*try {
+            //String mfowmw = "Dis some safdsf";
+            //itemListTextView.setText(mfowmw);
+
+            CharSequence chars = "GRRRRR";
+            EditText e = (EditText) findViewById(R.id.itemListTextView);
+            e.setText(chars);
+        }
+        catch (Exception ex)
+        {
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+
+        }*/
     }
 
     @Override
@@ -63,8 +89,6 @@ public class Camera extends AppCompatActivity {
     public void testCamera()
     {
         //Opens the camera in the app
-        //saveToFile("Testing file is getting written");
-        writeToFile("Is the file being written?", getApplicationContext());
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
     }
@@ -72,10 +96,12 @@ public class Camera extends AppCompatActivity {
     //Called when the capture button is pressed
     public void onCapturePressed(View view)
     {
+
+
         testCamera();
     }
 
-    void testVisionObjectDetection(Bitmap img)
+    String testVisionObjectDetection(Bitmap img)
     {
         //writeToFile("Is the function being called?", getApplicationContext());
 
@@ -109,25 +135,15 @@ public class Camera extends AppCompatActivity {
                             String text = label.getText();
                             String entityId = label.getEntityId();
                             float confidence = label.getConfidence();
-                            data += "Text: " + text + ", entity: " + entityId + ", confidence: " + Float.toString(confidence) + "\n";
-                            //try
-                            //{
-                                //Connects to the server
-                                /*Socket s = new Socket("192.168.0.10",port);
+                            data += "Text: " + text + ", confidence: " + Float.toString(confidence) + "\n";
 
-
-                                DataOutputStream outToServer = new DataOutputStream(s.getOutputStream());
-
-                                outToServer.writeUTF(data);
-                                //writeToFile(data, getApplicationContext());
-                                //Toast.makeText(camera, "Test", Toast.LENGTH_SHORT).show();
-                            //}
-                            //catch (IOException ex)
-                            //{
-
-                            //}*/
                         }
-                        Camera.saveToFile(data);
+
+                            Camera.saveToFile(data);
+                        CharSequence newchars = data;
+                        EditText e = (EditText) findViewById(R.id.itemListTextView);
+                        e.setText(newchars);
+
                         //Toast.makeText(this., "Test", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -136,34 +152,35 @@ public class Camera extends AppCompatActivity {
                     public void onFailure(Exception e) {
                         // Task failed with an exception
                         // ...
-                        writeToFile("something went wrong", getApplicationContext());
                     }
                 });
-    }
 
-    private void writeToFile(String data, Context context) {
-        /*try {
-            File f = new File(Environment.getExternalStorageDirectory().toString(), "MLKITTest.txt");
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(f);
-            /*OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("MLKITTest.txt", Context.MODE_PRIVATE));
-            outputStreamWriter.write(data);
-            outputStreamWriter.close();
+        /*try
+        {
+            labeler.wait();
+            CharSequence chars = "Just checking this works";
+            //itemListTextView.setText(chars);
         }
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }*/
+        catch (InterruptedException ex)
+        {}*/
+        //CharSequence chars = "Just checking this works";
+        //itemListTextView.setText(chars);
+        //EditText e = (EditText) findViewById(R.id.itemListTextView);
+        //e.setText(chars);
 
 
+        return "Testing returns";
     }
 
     public static boolean saveToFile( String data){
+
         try {
             new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "Visontest.txt" ).mkdir();
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Visontest.txt");
-            if (!file.exists()) {
+            //if (!file.exists()) {
                 file.createNewFile();
-            }
-            FileOutputStream fileOutputStream = new FileOutputStream(file,true);
+            //}
+            FileOutputStream fileOutputStream = new FileOutputStream(file,false);
             fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
 
             return true;
@@ -184,15 +201,67 @@ public class Camera extends AppCompatActivity {
         {
             //Stores the image taken in a variable
             image = (Bitmap) data.getExtras().get("data");
-
+            //testVisionObjectDetection(image);
             try
             {
+
+                try
+                {
+
+                    testVisionObjectDetection(image);
+                    /*CharSequence chars = testVisionObjectDetection(image);
+                    File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Visontest.txt");
+                    while(!file.canWrite())
+                    {
+                        synchronized (this)
+                        {
+                            wait(1000);
+                        }
+
+                    }
+                    FileReader fr = new FileReader(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Visontest.txt");
+                    BufferedReader textReader= new BufferedReader(fr);
+                    String temp = "";
+                    String line;
+                    while (true)
+                    {
+                        line = textReader.readLine();
+                        if (line == null)
+                        {break;}
+                        temp += line;
+
+                    }
+
+                    CharSequence newchars = temp;
+                    EditText e = (EditText) findViewById(R.id.itemListTextView);
+                    e.setText(newchars);
+                    textReader.close();
+                    fr.close();*/
+
+                }
+                catch (Exception ex)
+                {
+                    Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
                 //Starts a new thread to send the image to the server
                 new AsyncTask<Void,Void,Void>(){
 
                     @Override
                     protected Void doInBackground(Void ...params) {
-                        testVisionObjectDetection(image);
+                        //CharSequence chars = "Is it threads fault?";
+                        /*try
+                        {
+                            CharSequence chars = testVisionObjectDetection(image);
+                            EditText e = (EditText) findViewById(R.id.itemListTextView);
+                            e.setText(chars);
+                        }
+                        catch (Exception ex)
+                        {
+                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+                        }*/
+
+                        //testVisionObjectDetection(image);
                         /*try
                         {
 
