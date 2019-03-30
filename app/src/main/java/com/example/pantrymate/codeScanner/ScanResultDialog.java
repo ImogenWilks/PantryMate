@@ -24,11 +24,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class ScanResultDialog extends AppCompatDialog {
     public ScanResultDialog(@NonNull Context context, @NonNull Result result) {
@@ -61,26 +56,8 @@ public class ScanResultDialog extends AppCompatDialog {
 
 
             JSONObject item = new JSONObject(data);
-            final JSONObject product = item.getJSONObject("product");
-            final Map<String, Object> map =
-                    product.keySet()
-                            .stream()
-                            .collect(Collectors.toMap(
-                                    Function.identity(),
-                                    product::get
-                            ));
-            //final Map<String, Object> objectMap = product.toMap();
-            //Map product = ((Map)item.get("product"));
-
-            /*
-            Iterator<Map.Entry> itr = product.entrySet().iterator();
-            while (itr.hasNext()){
-                Map.Entry pair = itr.next();
-                if (pair.getKey() == "product_name"){
-                    productName = (String) pair.getValue();
-                }
-            }*/
-
+            JSONObject product = item.getJSONObject("product");
+            productName = product.getString("product_name");
             parsed.setText(productName);
 
         } catch(MalformedURLException e) {

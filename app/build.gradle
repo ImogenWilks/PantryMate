@@ -24,8 +24,14 @@ android {
     }
 }
 
+configurations {
+    all {
+        exclude group: 'org.json', module: 'json'
+    }
+}
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     implementation 'com.google.android.material:material:1.0.0-beta01'
@@ -38,4 +44,5 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'org.jetbrains:annotations:15.0'
+    implementation 'org.json:json:20180813'
 }
