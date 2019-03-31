@@ -27,4 +27,9 @@
     <string name="shopRemoveExplain">To remove an item all you need to do is swipe from right to left!</string>
     <string name="shopTickExplain">To tick an item off your list you can either press the scan button and scan a valid barcode or you can simply double tap the item. After ticking off an item it will be automatically added to your pantry.</string>
     <string name="title_activity_receipt">receipt</string>
+    <string name="camera">Camera</string>
+    <string name="button">Button</string>
+    <string name="textview">TextView</string>
+    <string name="capture">Capture</string>
+    <string name="reciepttaker">CAPTURE</string>
 </resources>
