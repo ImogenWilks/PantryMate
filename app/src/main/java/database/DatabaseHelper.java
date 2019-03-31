@@ -9,13 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String DB_NAME = "pantry.db";
+    public static String DB_NAME;
     private static final int DB_VERSION = 1;
 
-    public DatabaseHelper(Context context)
+
+    //supply databasehelper with a database file name
+    public DatabaseHelper(Context context, String databaseName)
     {
-        super(context, DB_NAME, null, DB_VERSION);
+        super(context, databaseName, null, DB_VERSION);
+        this.DB_NAME = databaseName;
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase db)
@@ -76,7 +80,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void  updateFood(DBPantry updatedPantry, String oldFoodName, String dateAdded)
     {
-        System.out.println("RAN");
         System.out.println(updatedPantry.getName());
         System.out.println(updatedPantry.getAmount());
         System.out.println(updatedPantry.getDateExpiry());
@@ -98,5 +101,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.delete(DBPantry.TABLENAME, DBPantry.COLUMN_FOODNAME + " = ? AND " + DBPantry.COLUMN_DATEADDED + " = ?", new String[]{foodName, dateAdded});
+    }
+
+
+    public void transferToPantry(Context context)
+    {
+        DatabaseHelper shoppingDB = new DatabaseHelper(context, "shopping.db");
+        DatabaseHelper pantryDB = new DatabaseHelper(context, "pantry.db");
+
+        List<DBPantry> shoppingList = shoppingDB.fetchPantryAll();
+
+        for(DBPantry x : shoppingList)
+        {
+            pantryDB.insertFood(x.getName(), x.getDateExpiry(), x.getAmount());
+        }
+        shoppingDB.close();
+        pantryDB.close();
+
+
     }
 }

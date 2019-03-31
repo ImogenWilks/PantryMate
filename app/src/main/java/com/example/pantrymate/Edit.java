@@ -39,7 +39,7 @@ public class Edit extends AppCompatActivity  {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //db is the database helper object
-        db = new DatabaseHelper(this);
+        db = new DatabaseHelper(this, "pantry.db");
 
         itemList = getPantry();
 

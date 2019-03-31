@@ -35,7 +35,7 @@ public class editCheck extends AppCompatActivity {
         setContentView(R.layout.activity_edit_check);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        db = new DatabaseHelper(this);
+        db = new DatabaseHelper(this, "pantry.db");
 
 
         Bundle bundle = getIntent().getExtras();
