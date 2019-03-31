@@ -103,7 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(DBPantry.TABLENAME, DBPantry.COLUMN_FOODNAME + " = ? AND " + DBPantry.COLUMN_DATEADDED + " = ?", new String[]{foodName, dateAdded});
     }
 
-
+    //run this function to transfer anything from the shopping list table to the main pantry table
     public void transferToPantry(Context context)
     {
         DatabaseHelper shoppingDB = new DatabaseHelper(context, "shopping.db");
