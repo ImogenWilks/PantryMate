@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.example.pantrymate.R;
+import com.example.pantrymate.ScanResultDialog;
 import com.example.pantrymate.base.BaseActivity;
 
 public class CodeScannerActivity extends BaseActivity {

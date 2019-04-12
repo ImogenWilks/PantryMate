@@ -1,69 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="16dp"
-    android:paddingEnd="16dp"
-    android:paddingStart="16dp"
-    android:paddingTop="8dp">
+    android:layout_height="match_parent"
+    >
 
-    <TextView
-        android:id="@+id/result"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif"
-        android:maxLines="5"
-        android:textColor="#ff333333"
-        android:textSize="15sp"
-        tools:text="Scan result"/>
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="20dp"
+        android:id="@+id/topLayout"
+       >
 
-    <TextView
-        android:id="@+id/format"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif"
-        android:maxLines="2"
-        android:textColor="#ff777777"
-        android:textSize="15sp"
-        tools:text="Code format"/>
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Barcode Number:"/>
+        <TextView
+            android:id="@+id/result"
+            android:layout_below="@id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="Scan result"/>
 
-    <TextView
-        android:id="@+id/jsonParse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif"
-        android:maxLines="2"
-        android:textColor="#ff777777"
-        android:textSize="15sp"
-        android:hint="Product name"/>
+        <TextView
+            android:id="@+id/type"
+            android:layout_below="@id/result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Code Format:"/>
+        <TextView
+            android:id="@+id/format"
+            android:layout_below="@id/type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif"
+            android:textColor="#ff777777"
+            android:textSize="15sp"
+            android:text="Code format"/>
 
+        <TextView
+            android:id="@+id/name"
+            android:layout_below="@id/format"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Name: "/>
+
+        <TextView
+            android:id="@+id/jsonParse"
+            android:layout_below="@id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="sans-serif"
+            android:maxLines="2"
+            android:textColor="#ff777777"
+            android:textSize="15sp"
+            android:hint="@string/product_name"/>
+    </RelativeLayout>
     <LinearLayout
-        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:layout_below="@id/topLayout"
+        android:layout_alignParentEnd="true"
 
-        <Button
-            android:id="@+id/copy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/copy"
-            tools:ignore="ButtonStyle"/>
+        >
 
-        <Button
-            android:id="@+id/close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/close"
-            tools:ignore="ButtonStyle"/>
+            <Button
+                android:id="@+id/copy"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/copy"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/button_format"
+                android:layout_weight="1"
+                />
+
+            <Button
+                android:id="@+id/close"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/button_format"
+                android:text="@string/close"
+                android:textColor="#FFFFFF"
+                android:layout_weight="1"
+                />
     </LinearLayout>
-</LinearLayout>
+
+</RelativeLayout>

@@ -25,7 +25,7 @@ import database.DatabaseHelper;
 
 public class editCheck extends AppCompatActivity {
 
-    private DatabaseHelper db;
+    private DatabaseHelper db,db1;
     private EditText cname,cexpiry,cquantity;
     private Button submitBtn;
 
@@ -36,7 +36,7 @@ public class editCheck extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         db = new DatabaseHelper(this, "pantry.db");
-
+        db1 = new DatabaseHelper(this, "shopping.db");
 
         Bundle bundle = getIntent().getExtras();
 
@@ -46,7 +46,8 @@ public class editCheck extends AppCompatActivity {
         String quantity = bundle.getString("quantity");
         final String dateAdded = bundle.getString("date");
         Integer add =bundle.getInt("Add");
-
+        Boolean tempPantry = bundle.getBoolean("tempPantry");
+        String activity = bundle.getString("activity");
 
         EditText cname = findViewById(R.id.changeName);
         EditText cexpiry = findViewById(R.id.changeExpiry);
@@ -75,18 +76,19 @@ public class editCheck extends AppCompatActivity {
 
                 Pair<Integer, Boolean> pair = validateChanges(changeName, changeExpiry, changeQuantity,add);
                 if (pair.second) {
-                    if (add==1)
-                    {
-                        addItem(changeName,changeExpiry,pair.first);
-                        Intent i = new Intent(editCheck.this, Edit.class);
+                    if (add==1){addItem(changeName,changeExpiry,pair.first,tempPantry);}
+                    else if (add==2) {updateFood(changeName, changeExpiry, pair.first, name, dateAdded,tempPantry);}
+
+                    if (activity.equals("barcode")){
+                        Intent i = new Intent(editCheck.this, barcode.class);
                         startActivity(i);
                     }
-                    else if (add==2) {
-                        updateFood(changeName, changeExpiry, pair.first, name, dateAdded);
+                    else if(activity.equals("Edit")){
                         Intent i = new Intent(editCheck.this, Edit.class);
                         startActivity(i);
                     }
                     else{
+                        System.out.println("IT IS       "+activity);
                         Intent i = new Intent(editCheck.this, ShoppingList.class);
                         startActivity(i);
                     }
@@ -114,7 +116,7 @@ public class editCheck extends AppCompatActivity {
 
         if (updatedFoodName.length()==0 || updatedExpiry.length()==0 || updatedAmount.length()==0){ errorMessage="Please do not leave any fields blank"; }
 
-        else if (! Pattern.matches("^[A-Za-z]+$",updatedFoodName)) { errorMessage="Please only enter letters into the Name field"; }
+        else if (! Pattern.matches("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$",updatedFoodName)) { errorMessage="Please only enter letters into the Name field"; }
 
 
         if (add != 3) {
@@ -143,7 +145,7 @@ public class editCheck extends AppCompatActivity {
         return pair;
     }
 
-    private void updateFood(String updatedFoodName, String updatedExpiry, int updatedAmount, String oldFoodName, String dateAdded) {
+    private void updateFood(String updatedFoodName, String updatedExpiry, int updatedAmount, String oldFoodName, String dateAdded,boolean usingTemp) {
         // pass the new variable edits along with its old food name and the date it was added
         DBPantry tempPantry = new DBPantry();
 
@@ -151,12 +153,14 @@ public class editCheck extends AppCompatActivity {
         tempPantry.setDateExpiry(updatedExpiry);
         tempPantry.setAmount(updatedAmount);
 
-        db.updateFood(tempPantry, oldFoodName, dateAdded);
+        if (usingTemp){db1.updateFood(tempPantry,oldFoodName,dateAdded);}
+        else{ db.updateFood(tempPantry, oldFoodName, dateAdded);}
     }
 
-    private void addItem(String foodName, String expiry, int amount) {
+    private void addItem(String foodName, String expiry, int amount,boolean usingTemp) {
         // inserts an item into the table
-        db.insertFood(foodName, expiry, amount);
+        if (usingTemp){db1.insertFood(foodName,expiry,amount);}
+        else{ db.insertFood(foodName, expiry, amount);}
     }
 
     @Override

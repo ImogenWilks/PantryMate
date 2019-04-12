@@ -59,6 +59,8 @@ public class ShoppingList extends AppCompatActivity {
                 bundle.putString("quantity", itemList.get(position).getText3());
                 bundle.putString("date", itemList.get(position).getDateAdded());
                 bundle.putInt("Add", 3);
+                bundle.putBoolean("tempPantry",true);
+                bundle.putString("activity","ShoppingList");
                 i.putExtras(bundle);
                 startActivity(i);
             }
@@ -120,6 +122,8 @@ public class ShoppingList extends AppCompatActivity {
                 bundle.putString("quantity", "");
                 bundle.putString("date", "");
                 bundle.putInt("Add", 3);
+                bundle.putBoolean("tempPantry",true);
+                bundle.putString("activity","ShoppingList");
                 i.putExtras(bundle);
                 startActivity(i);
 
