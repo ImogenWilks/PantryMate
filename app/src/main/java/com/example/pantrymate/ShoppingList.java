@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import com.example.pantrymate.codeScanner.CodeScannerActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -28,7 +29,7 @@ public class ShoppingList extends AppCompatActivity {
     private Adapter nAdapter;
     private RecyclerView.LayoutManager nlayoutManager;
     ArrayList<Items> itemList = new ArrayList<>();
-    Button addBut,helpBut;
+    Button addBut,helpBut, scanBut;
 
 
     @Override
@@ -129,6 +130,9 @@ public class ShoppingList extends AppCompatActivity {
 
             }
         });
+
+        scanBut = (Button) findViewById(R.id.shopScan);
+        scanBut.setOnClickListener(v -> startActivity(new Intent(this, CodeScannerActivity.class)));
 
 
         helpBut = (Button) findViewById(R.id.instructions);
