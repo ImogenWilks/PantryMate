@@ -3,13 +3,16 @@ package com.example.pantrymate;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 
 import android.util.Log;
 import android.view.Menu;
@@ -21,11 +24,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
 import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -39,6 +45,7 @@ import java.io.IOException;
 
 import java.io.OutputStreamWriter;
 import java.net.*;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Camera extends AppCompatActivity {
@@ -47,6 +54,7 @@ public class Camera extends AppCompatActivity {
     Bitmap image = null;
     int port = 3000;
     EditText itemListTextView;
+    String currentPhotoPath = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +87,21 @@ public class Camera extends AppCompatActivity {
         }*/
     }
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String imageFileName =  "PantryMate";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -90,14 +113,42 @@ public class Camera extends AppCompatActivity {
     {
         //Opens the camera in the app
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        //startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+
+                //Toast.makeText(this, "Its wokkin", Toast.LENGTH_SHORT).show();
+
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                //Toast.makeText(this, "Its fookin broke", Toast.LENGTH_SHORT).show();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                try
+                {
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            /*"com.example.android.fileprovider"*/ "com.example.pantrymate.fileprovider",
+                            photoFile);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                }
+                catch (Exception ex)
+                {
+                    saveToFile(ex.toString());
+                }
+
+            }
+        }
     }
 
     //Called when the capture button is pressed
     public void onCapturePressed(View view)
     {
-
-
         testCamera();
     }
 
@@ -116,6 +167,9 @@ public class Camera extends AppCompatActivity {
 
         FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance().getCloudImageLabeler();
 
+        FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
+                .getCloudTextRecognizer();
+
 // Or, to set the minimum confidence required:
 // FirebaseVisionCloudImageLabelerOptions options =
 //     new FirebaseVisionCloudImageLabelerOptions.Builder()
@@ -130,7 +184,7 @@ public class Camera extends AppCompatActivity {
                     public void onSuccess(List<FirebaseVisionImageLabel> labels) {
                         // Task completed successfully
                         // ...
-                        String data = "";
+                        String data = "Image recognition::";
                         for (FirebaseVisionImageLabel label: labels) {
                             String text = label.getText();
                             String entityId = label.getEntityId();
@@ -140,8 +194,11 @@ public class Camera extends AppCompatActivity {
                         }
 
                             Camera.saveToFile(data);
-                        CharSequence newchars = data;
+
+                        data += "-------\n\n";
+
                         EditText e = (EditText) findViewById(R.id.itemListTextView);
+                        CharSequence newchars = e.getText() + data;
                         e.setText(newchars);
 
                         //Toast.makeText(this., "Test", Toast.LENGTH_SHORT).show();
@@ -154,6 +211,32 @@ public class Camera extends AppCompatActivity {
                         // ...
                     }
                 });
+
+        Task<FirebaseVisionText> result =
+                detector.processImage(image)
+                        .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                            @Override
+                            public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                                // Task completed successfully
+                                // ...
+                                String data = "Text recognition" + firebaseVisionText.getText();
+
+                                EditText e = (EditText) findViewById(R.id.itemListTextView);
+                                CharSequence newchars = e.getText() + data;
+                                e.setText(newchars);
+
+
+                            }
+                        })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+                                    }
+                                });
+
 
         /*try
         {

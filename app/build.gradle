@@ -9,6 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     compileOptions {
@@ -45,6 +46,12 @@ dependencies {
     //implementation 'com.google.firebase:firebase-ml-vision-image-label-model:15.0.0'
     implementation 'com.google.firebase:firebase-ml-vision:19.0.2'
     implementation 'com.google.firebase:firebase-ml-vision-image-label-model:17.0.2'
+
+    //File provider
+    implementation 'com.android.support:support-v4:28.1.0'
+    implementation 'com.android.support:multidex:1.0.3'
+
+
 }
 
 //MLKit
