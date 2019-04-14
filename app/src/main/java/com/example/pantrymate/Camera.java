@@ -1,11 +1,9 @@
 package com.example.pantrymate;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,13 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,19 +29,14 @@ import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 
-import java.io.OutputStreamWriter;
 import java.net.*;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Camera extends AppCompatActivity {
@@ -64,39 +54,24 @@ public class Camera extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
-        //testCamera();
-
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        /*try {
-            //String mfowmw = "Dis some safdsf";
-            //itemListTextView.setText(mfowmw);
-
-            CharSequence chars = "GRRRRR";
-            EditText e = (EditText) findViewById(R.id.itemListTextView);
-            e.setText(chars);
-        }
-        catch (Exception ex)
-        {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
-
-        }*/
     }
 
     private File createImageFile() throws IOException {
-        // Create an image file name
-        String imageFileName =  "PantryMate";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+
+            // Create an image file name
+            String imageFileName =  "PantryMate";
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File image = File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            );
 
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
@@ -110,11 +85,10 @@ public class Camera extends AppCompatActivity {
         return true;
     }
 
-    public void testCamera()
+    public void dispatchCameraIntent()
     {
         //Opens the camera in the app
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
 
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
@@ -122,24 +96,18 @@ public class Camera extends AppCompatActivity {
             try {
                 photoFile = createImageFile();
 
-                //Toast.makeText(this, "Its wokkin", Toast.LENGTH_SHORT).show();
-
             } catch (IOException ex) {
-                // Error occurred while creating the File
-                //Toast.makeText(this, "Its fookin broke", Toast.LENGTH_SHORT).show();
+
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 try
                 {
                     Uri photoURI = FileProvider.getUriForFile(this,
-                            /*"com.example.android.fileprovider"*/ "com.example.pantrymate.fileprovider",
+                            "com.example.pantrymate.fileprovider",
                             photoFile);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-
-                    //Bitmap image = BitmapFactory.decodeFile(currentPhotoPath);
-                    //testVisionObjectDetection(image);
 
                 }
                 catch (Exception ex)
@@ -154,34 +122,24 @@ public class Camera extends AppCompatActivity {
     //Called when the capture button is pressed
     public void onCapturePressed(View view)
     {
-        testCamera();
+        dispatchCameraIntent();
     }
 
-    String testVisionObjectDetection(Bitmap img)
+    public void segmentImage(Bitmap img)
     {
-        //writeToFile("Is the function being called?", getApplicationContext());
+        //TODO:
+        //Implement code which segemnts the image
+
 
         FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(img);
 
-        FirebaseVisionImageMetadata metadata = new FirebaseVisionImageMetadata.Builder()
-                .setWidth(480)   // 480x360 is typically sufficient for
-                .setHeight(360)  // image recognition
-                .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-                .setRotation(0)
-                .build();
+        detectObjects(image);
+        detectText(image);
+    }
 
+    void detectObjects(FirebaseVisionImage image)
+    {
         FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance().getCloudImageLabeler();
-
-        FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
-                .getCloudTextRecognizer();
-
-// Or, to set the minimum confidence required:
-// FirebaseVisionCloudImageLabelerOptions options =
-//     new FirebaseVisionCloudImageLabelerOptions.Builder()
-//         .setConfidenceThreshold(0.7f)
-//         .build();
-// FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance()
-//     .getCloudImageLabeler(options);
 
         labeler.processImage(image)
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
@@ -189,7 +147,8 @@ public class Camera extends AppCompatActivity {
                     public void onSuccess(List<FirebaseVisionImageLabel> labels) {
                         // Task completed successfully
                         // ...
-                        String data = "Image recognition::";
+                        //Loops through each object that was recognised
+                        String data = "Image recognition:\n";
                         for (FirebaseVisionImageLabel label: labels) {
                             String text = label.getText();
                             String entityId = label.getEntityId();
@@ -198,25 +157,34 @@ public class Camera extends AppCompatActivity {
 
                         }
 
-                            Camera.saveToFile(data);
-
                         data += "-------\n\n";
 
+                        //Displays each item detected on screen
                         EditText e = (EditText) findViewById(R.id.itemListTextView);
                         CharSequence newchars = e.getText() + data;
                         e.setText(newchars);
-
-                        //Toast.makeText(this., "Test", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(Exception e) {
+                    public void onFailure(Exception ex) {
                         // Task failed with an exception
                         // ...
+
+                        String data = "Object recognition failed!:\n\n" + ex.toString();
+                        EditText e = (EditText) findViewById(R.id.itemListTextView);
+                        CharSequence newchars = e.getText() + data;
+                        e.setText(newchars);
                     }
                 });
+    }
 
+    void detectText(FirebaseVisionImage image)
+    {
+        FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
+                .getCloudTextRecognizer();
+
+        //Processes the image to find text
         Task<FirebaseVisionText> result =
                 detector.processImage(image)
                         .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
@@ -240,7 +208,7 @@ public class Camera extends AppCompatActivity {
                                         // Task failed with an exception
                                         // ...
 
-                                        String data = "Could not find text";
+                                        String data = "Could not find text:\n\n" + ex.toString();
                                         EditText e = (EditText) findViewById(R.id.itemListTextView);
                                         CharSequence newchars = e.getText() + data;
                                         e.setText(newchars);
@@ -248,23 +216,8 @@ public class Camera extends AppCompatActivity {
                                     }
                                 });
 
-
-        /*try
-        {
-            labeler.wait();
-            CharSequence chars = "Just checking this works";
-            //itemListTextView.setText(chars);
-        }
-        catch (InterruptedException ex)
-        {}*/
-        //CharSequence chars = "Just checking this works";
-        //itemListTextView.setText(chars);
-        //EditText e = (EditText) findViewById(R.id.itemListTextView);
-        //e.setText(chars);
-
-
-        return "Testing returns";
     }
+
 
     public static boolean saveToFile( String data){
 
@@ -294,96 +247,7 @@ public class Camera extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
         {
             Bitmap image = BitmapFactory.decodeFile(currentPhotoPath);
-            testVisionObjectDetection(image);
-
-            //Stores the image taken in a variable
-            /*image = (Bitmap) data.getExtras().get("data");
-            //testVisionObjectDetection(image);
-            try
-            {
-
-                try
-                {
-
-                    testVisionObjectDetection(image);
-                    /*CharSequence chars = testVisionObjectDetection(image);
-                    File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Visontest.txt");
-                    while(!file.canWrite())
-                    {
-                        synchronized (this)
-                        {
-                            wait(1000);
-                        }
-
-                    }
-                    FileReader fr = new FileReader(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Visontest.txt");
-                    BufferedReader textReader= new BufferedReader(fr);
-                    String temp = "";
-                    String line;
-                    while (true)
-                    {
-                        line = textReader.readLine();
-                        if (line == null)
-                        {break;}
-                        temp += line;
-
-                    }
-
-                    CharSequence newchars = temp;
-                    EditText e = (EditText) findViewById(R.id.itemListTextView);
-                    e.setText(newchars);
-                    textReader.close();
-                    fr.close();
-
-                }
-                catch (Exception ex)
-                {
-                    Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-                //Starts a new thread to send the image to the server
-                new AsyncTask<Void,Void,Void>(){
-
-                    @Override
-                    protected Void doInBackground(Void ...params) {
-                        //CharSequence chars = "Is it threads fault?";
-                        /*try
-                        {
-                            CharSequence chars = testVisionObjectDetection(image);
-                            EditText e = (EditText) findViewById(R.id.itemListTextView);
-                            e.setText(chars);
-                        }
-                        catch (Exception ex)
-                        {
-                            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
-                        }*/
-
-                        //testVisionObjectDetection(image);
-                        /*try
-                        {
-
-                            //sendNetworkDataTest(image);
-                        }
-                        catch (IOException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-
-                }.execute();
-
-                //Stores the image to a file on the phone
-                File f = new File(Environment.getExternalStorageDirectory().toString(), "Test.png");
-                FileOutputStream out = new FileOutputStream(f);
-                image.compress(Bitmap.CompressFormat.PNG, 100, out);
-                out.flush();
-                out.close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }*/
+            segmentImage(image);
         }
     }
 
