@@ -3,6 +3,7 @@ package com.example.pantrymate;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -136,6 +137,10 @@ public class Camera extends AppCompatActivity {
                             photoFile);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+
+                    //Bitmap image = BitmapFactory.decodeFile(currentPhotoPath);
+                    //testVisionObjectDetection(image);
+
                 }
                 catch (Exception ex)
                 {
@@ -231,9 +236,15 @@ public class Camera extends AppCompatActivity {
                         .addOnFailureListener(
                                 new OnFailureListener() {
                                     @Override
-                                    public void onFailure(@NonNull Exception e) {
+                                    public void onFailure(@NonNull Exception ex) {
                                         // Task failed with an exception
                                         // ...
+
+                                        String data = "Could not find text";
+                                        EditText e = (EditText) findViewById(R.id.itemListTextView);
+                                        CharSequence newchars = e.getText() + data;
+                                        e.setText(newchars);
+
                                     }
                                 });
 
@@ -282,8 +293,11 @@ public class Camera extends AppCompatActivity {
     {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
         {
+            Bitmap image = BitmapFactory.decodeFile(currentPhotoPath);
+            testVisionObjectDetection(image);
+
             //Stores the image taken in a variable
-            image = (Bitmap) data.getExtras().get("data");
+            /*image = (Bitmap) data.getExtras().get("data");
             //testVisionObjectDetection(image);
             try
             {
@@ -319,7 +333,7 @@ public class Camera extends AppCompatActivity {
                     EditText e = (EditText) findViewById(R.id.itemListTextView);
                     e.setText(newchars);
                     textReader.close();
-                    fr.close();*/
+                    fr.close();
 
                 }
                 catch (Exception ex)
@@ -353,7 +367,7 @@ public class Camera extends AppCompatActivity {
                         catch (IOException e)
                         {
                             e.printStackTrace();
-                        }*/
+                        }
                         return null;
                     }
 
@@ -369,7 +383,7 @@ public class Camera extends AppCompatActivity {
             catch (IOException e)
             {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 
