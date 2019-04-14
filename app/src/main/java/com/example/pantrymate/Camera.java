@@ -46,6 +46,7 @@ public class Camera extends AppCompatActivity {
     int port = 3000;
     EditText itemListTextView;
     String currentPhotoPath = null;
+    File imageFile = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +110,8 @@ public class Camera extends AppCompatActivity {
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
 
+                    //Stores the image file outside the scope of the function so it can be deleted once the image has been processed
+                    imageFile = photoFile;
                 }
                 catch (Exception ex)
                 {
@@ -135,6 +138,8 @@ public class Camera extends AppCompatActivity {
 
         detectObjects(image);
         detectText(image);
+
+        imageFile.delete();
     }
 
     void detectObjects(FirebaseVisionImage image)
