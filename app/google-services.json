@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "273975744937",
+    "firebase_url": "https://pantymate-a8a7d.firebaseio.com",
+    "project_id": "pantymate-a8a7d",
+    "storage_bucket": "pantymate-a8a7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273975744937:android:5560eec21e0fbc41",
+        "android_client_info": {
+          "package_name": "com.example.pantrymate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273975744937-vc5bfauv58ppk24f8cheqi6fm7eqa0ee.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlY2N0eq_3l9AwAGBTzSUasT9kWDqO690"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
