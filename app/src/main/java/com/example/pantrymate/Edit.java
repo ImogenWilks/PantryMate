@@ -41,6 +41,7 @@ public class Edit extends AppCompatActivity  {
         //db is the database helper object
         db = new DatabaseHelper(this, "pantry.db");
 
+
         itemList = getPantry();
 
         nRecyclerView = findViewById(R.id.ListRecyclerView);

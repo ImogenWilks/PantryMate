@@ -31,4 +31,6 @@ public class Items {
         return itemInfo;
     }
     public String getDateAdded() {return dateAdded;}
+
+    public void changeQuantity(String changedQuantity){itemInfo=changedQuantity;}
 }

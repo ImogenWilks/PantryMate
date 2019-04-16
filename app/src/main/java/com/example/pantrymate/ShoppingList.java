@@ -262,10 +262,36 @@ public class ShoppingList extends AppCompatActivity {
         Date expiryDate=c.getTime();
         String expiryString=formatter.format(expiryDate);
 
-        itemList.remove(index);
-        db1.deleteFood(foodName,dateAdded);
-        nAdapter.notifyDataSetChanged();
-        db.insertFood(foodName,expiryString,intQuantity);
+        if (intQuantity > 1)
+        {
+            DBPantry tempPantry = new DBPantry();
+
+            tempPantry.setAmount(intQuantity-1);
+            tempPantry.setName(foodName);
+            tempPantry.setDateExpiry("N/A");
+            tempPantry.setDateAdded(dateAdded);
+            db1.updateFood(tempPantry,foodName,dateAdded);
+            db.insertFood(foodName,expiryString,1);
+
+            Items tempItem=itemList.get(index);
+            String storeQuantity=tempItem.getText3();
+
+            int tempQuantity=Integer.parseInt(storeQuantity);
+            tempQuantity-=1;
+            storeQuantity=Integer.toString(tempQuantity);
+
+            itemList.get(index).changeQuantity(storeQuantity);
+            nAdapter.notifyDataSetChanged();
+
+        }
+
+        else
+        {
+            itemList.remove(index);
+            db1.deleteFood(foodName, dateAdded);
+            nAdapter.notifyDataSetChanged();
+            db.insertFood(foodName, expiryString, intQuantity);
+        }
 
     }
 

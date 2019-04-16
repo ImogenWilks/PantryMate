@@ -18,13 +18,14 @@
             android:id="@+id/title"
             android:text="@string/partial_matches"
             android:layout_marginBottom="10dp"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryDark"/>
         <TextView
             android:layout_below="@id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:text="@string/partialInstructions"/>
 

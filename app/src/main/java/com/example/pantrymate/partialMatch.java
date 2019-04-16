@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import database.DBPantry;
 import database.DatabaseHelper;
 
 import android.content.Intent;
@@ -12,7 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class partialMatch extends AppCompatActivity {
 
@@ -20,6 +25,7 @@ public class partialMatch extends AppCompatActivity {
     private RecyclerView nRecyclerView;
     private Adapter nAdapter;
     private RecyclerView.LayoutManager nlayoutManager;
+    private DatabaseHelper db,db1;
 
     ArrayList<Items> itemList = new ArrayList<>();
     String[] item;
@@ -31,6 +37,16 @@ public class partialMatch extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        nRecyclerView = findViewById(R.id.ListRecyclerView);
+        nRecyclerView.setHasFixedSize(true);
+        nlayoutManager = new LinearLayoutManager(this);
+        nAdapter = new Adapter(itemList);
+        nRecyclerView.setLayoutManager(nlayoutManager);
+        nRecyclerView.setAdapter(nAdapter);
+
+        db = new DatabaseHelper(this, "pantry.db");
+        db1 = new DatabaseHelper(this, "list.db");
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null)
         {
@@ -40,12 +56,6 @@ public class partialMatch extends AppCompatActivity {
 
         }
 
-        nRecyclerView = findViewById(R.id.ListRecyclerView);
-        nRecyclerView.setHasFixedSize(true);
-        nlayoutManager = new LinearLayoutManager(this);
-        nAdapter = new Adapter(itemList);
-        nRecyclerView.setLayoutManager(nlayoutManager);
-        nRecyclerView.setAdapter(nAdapter);
 
 
 
@@ -53,7 +63,55 @@ public class partialMatch extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
 
+                String foodName=itemList.get(position).getText1();
+                String dateAdded=itemList.get(position).getDateAdded();
+                String quantity=itemList.get(position).getText3();
+                int intQuantity= Integer.parseInt(quantity);
+                Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = new Date();
+                String dateString=formatter.format(date);
 
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                c.add(Calendar.WEEK_OF_MONTH, 1);
+
+                Date expiryDate=c.getTime();
+                String expiryString=formatter.format(expiryDate);
+
+                if (intQuantity > 1)
+                {
+                    DBPantry tempPantry = new DBPantry();
+
+                    tempPantry.setAmount(intQuantity-1);
+                    tempPantry.setName(foodName);
+                    tempPantry.setDateExpiry("N/A");
+                    tempPantry.setDateAdded(dateAdded);
+                    db1.updateFood(tempPantry,foodName,dateAdded);
+                    db.insertFood(foodName,expiryString,1);
+
+                    Items tempItem=itemList.get(position);
+                    String storeQuantity=tempItem.getText3();
+
+                    int tempQuantity=Integer.parseInt(storeQuantity);
+                    tempQuantity-=1;
+                    storeQuantity=Integer.toString(tempQuantity);
+
+                    itemList.get(position).changeQuantity(storeQuantity);
+                    nAdapter.notifyDataSetChanged();
+
+                }
+
+                else
+                {
+                    itemList.remove(position);
+                    db1.deleteFood(foodName, dateAdded);
+                    nAdapter.notifyDataSetChanged();
+                    db.insertFood(foodName, expiryString, intQuantity);
+                }
+
+                Intent i = new Intent(partialMatch.this,ShoppingList.class);
+                startActivity(i);
 
             }
         });
@@ -67,6 +125,7 @@ public class partialMatch extends AppCompatActivity {
             itemList.add(new Items(item[pos],item[pos+1],item[pos+2],item[pos+3]));
             pos+=4;
         }
+        nAdapter.notifyDataSetChanged();
     }
 
     @Override

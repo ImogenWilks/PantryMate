@@ -96,6 +96,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void deleteAll()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(DBPantry.TABLENAME,null,null);
+    }
     public void deleteFood(String foodName, String dateAdded)
     {
         SQLiteDatabase db = this.getWritableDatabase();
