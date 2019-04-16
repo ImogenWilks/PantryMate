@@ -30,7 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ScanResultDialog extends AppCompatDialog {
-    public ScanResultDialog(@NonNull Context context, @NonNull Result result) {
+    public ScanResultDialog(@NonNull Context context, @NonNull Result result, boolean isShopping) {
         super(context, resolveDialogTheme(context));
         setTitle(R.string.scan_result);
         setContentView(R.layout.dialog_scan_result);
@@ -44,6 +44,8 @@ public class ScanResultDialog extends AppCompatDialog {
         TextView parsed = findViewById(R.id.jsonParse);
         String barcodeNum = result.getText();
         String productName = "";
+
+
 
         try {
             URL url = new URL("https://world.openfoodfacts.org/api/v0/product/" + barcodeNum + ".json");
@@ -77,11 +79,24 @@ public class ScanResultDialog extends AppCompatDialog {
             //noinspection ConstantConditions
             System.out.println("RESULT S HERE    "+parsed.getText());
             String name = parsed.getText().toString();
-            Intent i = new Intent(getContext(),barcode.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("name",name);
-            i.putExtras(bundle);
-            getContext().startActivity(i);
+
+            if (isShopping)
+            {
+                Intent i = new Intent(getContext(),ShoppingList.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name",name);
+                i.putExtras(bundle);
+                getContext().startActivity(i);
+            }
+
+            else {
+
+                Intent i = new Intent(getContext(), barcode.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name", name);
+                i.putExtras(bundle);
+                getContext().startActivity(i);
+            }
             /*((ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE))
                     .setPrimaryClip(ClipData.newPlainText(null, result.getText()));
             Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_LONG).show();

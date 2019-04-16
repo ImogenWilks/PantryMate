@@ -33,4 +33,6 @@
     <string name="capture">Capture</string>
     <string name="reciepttaker">CAPTURE</string>
     <string name="product_name">Product name</string>
+    <string name="partial_matches">Partial Matches</string>
+    <string name="partialInstructions">The item you\'ve scanned partially matches the following, simply click the item to check it off your list!</string>
 </resources>

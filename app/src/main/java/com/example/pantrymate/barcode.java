@@ -76,7 +76,7 @@ public class barcode extends AppCompatActivity {
             bundleCheck.putString("quantity","1");
             bundleCheck.putString("date",dateString);
             bundleCheck.putInt("Add",1); //adding
-            bundleCheck.putBoolean("tempPantry",true);
+            bundleCheck.putInt("pantry",2);
             bundleCheck.putString("activity","barcode");
             i.putExtras(bundleCheck);
             startActivity(i);
@@ -103,7 +103,7 @@ public class barcode extends AppCompatActivity {
                 bundle.putString("quantity", itemList.get(position).getText3());
                 bundle.putString("date", itemList.get(position).getDateAdded());
                 bundle.putInt("Add", 2); //updating;
-                bundle.putBoolean("tempPantry",true);
+                bundle.putInt("pantry",2);
                 bundle.putString("activity","barcode");
                 i.putExtras(bundle);
                 startActivity(i);
@@ -144,7 +144,7 @@ public class barcode extends AppCompatActivity {
                 bundle.putString("quantity","");
                 bundle.putString("date","");
                 bundle.putInt("Add",1); //adding
-                bundle.putBoolean("tempPantry",true);
+                bundle.putInt("pantry",2);
                 bundle.putString("activity","barcode");
                 i.putExtras(bundle);
                 startActivity(i);

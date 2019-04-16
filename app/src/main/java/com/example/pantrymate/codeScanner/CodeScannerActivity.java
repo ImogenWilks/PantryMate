@@ -22,14 +22,28 @@ public class CodeScannerActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_scanner);
+
+        boolean isShopping;
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null)
+        {
+            isShopping = bundle.getBoolean("comingFromShopping");
+        }
+        else{isShopping=false; }
+
+
         mCodeScanner = new CodeScanner(this, findViewById(R.id.scanner));
+
         mCodeScanner.setDecodeCallback(result -> runOnUiThread(() -> {
-            ScanResultDialog dialog = new ScanResultDialog(this, result);
+            ScanResultDialog dialog = new ScanResultDialog(this, result, isShopping);
             dialog.setOnDismissListener(d -> mCodeScanner.startPreview());
             dialog.show();
         }));
+
+
         mCodeScanner.setErrorCallback(error -> runOnUiThread(
                 () -> Toast.makeText(this, getString(R.string.scanner_error, error), Toast.LENGTH_LONG).show()));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 mPermissionGranted = false;

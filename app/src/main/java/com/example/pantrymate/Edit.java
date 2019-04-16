@@ -61,7 +61,7 @@ public class Edit extends AppCompatActivity  {
                 bundle.putString("quantity",itemList.get(position).getText3());
                 bundle.putString("date",itemList.get(position).getDateAdded());
                 bundle.putInt("Add",2);
-                bundle.putBoolean("tempPantry",false);
+                bundle.putInt("pantry",1);
                 bundle.putString("activity","Edit");
                 i.putExtras(bundle);
                 startActivity(i);
@@ -108,7 +108,7 @@ public class Edit extends AppCompatActivity  {
                 bundle.putString("quantity","");
                 bundle.putString("date","");
                 bundle.putInt("Add",1);
-                bundle.putBoolean("tempPantry",false);
+                bundle.putInt("pantry",1);
                 bundle.putString("activity","Edit");
                 i.putExtras(bundle);
                 startActivity(i);
