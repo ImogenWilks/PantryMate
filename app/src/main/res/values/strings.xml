@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pantry Mate</string>
+    <string name="app_name">PantryMate</string>
     <string name="Manual_Entry">Edit Pantry</string>
     <string name="Camera">Camera</string>
     <string name="HomePage">Home</string>
@@ -25,7 +25,7 @@
     <string name="title_activity_shopping_list">Shopping List</string>
     <string name="shopAddExplain">"To add an item simply click the + button to the left of the screen and fill in the details. Don't worry about the expiry date, this will added when you scan or tick an item off your list!</string>
     <string name="shopRemoveExplain">To remove an item all you need to do is swipe from right to left!</string>
-    <string name="shopTickExplain">To tick an item off your list you can either press the scan button and scan a valid barcode or you can simply double tap the item. After ticking off an item it will be automatically added to your pantry.</string>
+    <string name="shopTickExplain">To tick an item off your list you can either press the scan button and scan a valid barcode or you can simply swipe from left to right. After ticking off an item it will be automatically added to your pantry.</string>
     <string name="title_activity_receipt">receipt</string>
     <string name="camera">Camera</string>
     <string name="button">Button</string>
@@ -35,4 +35,6 @@
     <string name="product_name">Product name</string>
     <string name="partial_matches">Partial Matches</string>
     <string name="partialInstructions">The item you\'ve scanned partially matches the following, simply click the item to check it off your list!</string>
+    <string name="noMatchTitle">No Matches Found</string>
+    <string name="NoMatch2">Alternatively if you\'ve bought something not on your list, press add and we\'ll put it into your pantry for you.</string>
 </resources>

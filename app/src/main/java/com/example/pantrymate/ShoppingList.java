@@ -353,6 +353,7 @@ public class ShoppingList extends AppCompatActivity {
         else
         {
             System.out.println("NO MATCHES FOUND");
+            openDialogNoMatch();
         }
 
     }
@@ -364,6 +365,16 @@ public class ShoppingList extends AppCompatActivity {
         shopDialog.show(getSupportFragmentManager(),"help");
 
     }
+
+    public void openDialogNoMatch() {
+        matchesDialog matchesDialogue = new matchesDialog();
+        Bundle args = new Bundle();
+        args.putString("name",itemName);
+        matchesDialogue.setArguments(args);
+        matchesDialogue.show(getSupportFragmentManager(),"No Matches");
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
