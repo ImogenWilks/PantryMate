@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <include layout="@layout/toolbar" />
+    <RelativeLayout
+        android:id="@+id/topLayout"
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        >
+
+        <Button
+            android:id="@+id/addItem"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_format"
+            android:text="+"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp"
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            android:id="@+id/shopScan"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Scan Item"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:background="@drawable/button_format"
+            android:layout_centerInParent="true"
+
+            />
+
+        <Button
+            android:id="@+id/instructions"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="\?"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp"
+            android:background="@drawable/button_format"
+            android:layout_alignParentRight="true"
+
+            />
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ListRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topLayout"
+        android:clickable="true"
+        android:longClickable="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:scrollbars="vertical"
+        />
+
+</RelativeLayout>

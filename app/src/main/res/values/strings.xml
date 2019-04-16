@@ -5,7 +5,7 @@
     <string name="HomePage">Home</string>
     <string name="Barcode">Barcode Scanner</string>
     <string name="Help">Help</string>
-    <string name="title_activity_edit">Edit</string>
+    <string name="title_activity_edit">Pantry</string>
     <string name="title_activity_camera">Camera</string>
     <string name="title_activity_barcode">barcode</string>
     <string name="code_scanner">Code Scanner</string>
@@ -15,9 +15,21 @@
     <string name="copy">Copy</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="helpIntro">Welcome to PantryMate, the inventory organisation app. Our aim is to make your life easier by summarising what food you have at home and when it will expire. There are a few different ways for food items to be added or removed from your online pantry, this help page will show you how each one works.</string>
-    <string name="helpEdit">Edit: The edit page is used to manually change the information inside your pantry. Add allows you to put new items in your pantry. This requires you to input the food item(s) name, quantity of the item and the items expiry date. Edit lets you change information on the items that are already in the database. Remove allows you to manually remove an item from the pantry.</string>
-    <string name="helpCamera">Camera: Take a picture of your food items using your phone’s camera, and the app will add those items automatically to your pantry. For better results, make sure the room is well lit, the food items are spaced apart and that the packaging doesn’t obscure what the food looks like. (work in progress)</string>
-    <string name="helpBarcode">Barcode: Use your phone camera to scan the barcode of your food items. The app will then add those items automatically to your pantry. (work in progress)</string>
+    <string name="helpEdit">The edit page is used to manually change the information inside your pantry. Add allows you to put new items in your pantry. This requires you to input the food item(s) name, quantity of the item and the items expiry date. Edit lets you change information on the items that are already in the database. Remove allows you to manually remove an item from the pantry.</string>
+    <string name="helpCamera">Take a picture of your food items using your phone’s camera, and the app will add those items automatically to your pantry. For better results, make sure the room is well lit, the food items are spaced apart and that the packaging doesn’t obscure what the food looks like. (work in progress)</string>
+    <string name="helpBarcode">Use your phone camera to scan the barcode of your food items. The app will then add those items automatically to your pantry. (work in progress)</string>
     <string name="helpContact">Find a bug? Create an issue on our github page to let us know -  https://github.com/ImogenWilks/PantryMate/issues</string>
-
+    <string name="deleteExplain">To delete an item just swipe from right to left and watch it disappear!</string>
+    <string name="editExplain">To edit an item simply press on it in the pantry items list and a window will appear allowing you to edit the item\'s details.</string>
+    <string name="addExplain">In order to add an item simply click the + button to the left of the screen and fill in the details. After filling out the required fields simply press submit and the item will appear in your pantry.</string>
+    <string name="title_activity_shopping_list">Shopping List</string>
+    <string name="shopAddExplain">"To add an item simply click the + button to the left of the screen and fill in the details. Don't worry about the expiry date, this will added when you scan or tick an item off your list!</string>
+    <string name="shopRemoveExplain">To remove an item all you need to do is swipe from right to left!</string>
+    <string name="shopTickExplain">To tick an item off your list you can either press the scan button and scan a valid barcode or you can simply double tap the item. After ticking off an item it will be automatically added to your pantry.</string>
+    <string name="title_activity_receipt">receipt</string>
+    <string name="camera">Camera</string>
+    <string name="button">Button</string>
+    <string name="textview">TextView</string>
+    <string name="capture">Capture</string>
+    <string name="reciepttaker">CAPTURE</string>
 </resources>

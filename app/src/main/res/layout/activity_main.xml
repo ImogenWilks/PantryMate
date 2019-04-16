@@ -29,7 +29,7 @@
             android:background="@drawable/button_format"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:text="Edit" />
+            android:text="Pantry" />
 
         <Button
             android:id="@+id/camera"
@@ -69,7 +69,7 @@
             android:text="Barcode" />
 
         <Button
-            android:id="@+id/help"
+            android:id="@+id/receiptBtn"
             android:layout_width="0dp"
             android:layout_height="120dp"
             android:layout_marginLeft="10dp"
@@ -78,8 +78,7 @@
             android:background="@drawable/button_format"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:text="Help" />
-
+            android:text="Receipt" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -92,6 +91,7 @@
         android:weightSum="2">
 
         <Button
+            android:id="@+id/shopping"
             android:layout_width="0dp"
             android:layout_height="120dp"
             android:layout_marginLeft="30dp"
@@ -100,9 +100,10 @@
             android:background="@drawable/button_format"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:text="Blank" />
+            android:text="List" />
 
         <Button
+            android:id="@+id/help"
             android:layout_width="0dp"
             android:layout_height="120dp"
             android:layout_marginLeft="10dp"
@@ -111,7 +112,7 @@
             android:background="@drawable/button_format"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:text="Blank" />
+            android:text="Help" />
 
     </LinearLayout>
 

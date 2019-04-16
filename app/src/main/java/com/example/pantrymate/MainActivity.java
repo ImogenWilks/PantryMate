@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     private Button camera;
     private Button barcode;
     private Button help;
+    private Button shopping;
+    private Button receipt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        shopping = (Button) findViewById(R.id.shopping);
+        shopping.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                openShopping();
+            }
+        });
+
+        receipt = (Button) findViewById(R.id.receiptBtn);
+        receipt.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                openReceipt();
+            }
+        });
+
 
     }
 
@@ -74,6 +92,16 @@ public class MainActivity extends AppCompatActivity {
     }
     public void openHelp(){
         Intent intent = new Intent(this,Help.class);
+        startActivity(intent);
+    }
+
+    public void openReceipt(){
+        Intent intent = new Intent(this,receipt.class);
+        startActivity(intent);
+    }
+
+    public void openShopping(){
+        Intent intent = new Intent(this,ShoppingList.class);
         startActivity(intent);
     }
 }

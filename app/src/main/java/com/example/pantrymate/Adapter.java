@@ -1,6 +1,8 @@
 package com.example.pantrymate;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
 
     private ArrayList<Items> nList;
     private OnItemClickListener nListener;
+
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
@@ -43,6 +46,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                     }
                 }
             });
+
+
         }
     }
 

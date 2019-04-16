@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.pantrymate">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -18,15 +16,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".editCheck"></activity>
+        <activity
+            android:name=".receipt"
+            android:label="@string/title_activity_receipt"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ShoppingList"
+            android:label="@string/title_activity_shopping_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".editCheck" />
         <activity
             android:name=".barcode"
             android:label="@string/title_activity_barcode"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".codeScanner.CodeScannerActivity"
-            android:label="Code Scanner"
-            />
+            android:label="Code Scanner" />
         <activity
             android:name=".Camera"
             android:label="@string/title_activity_camera"

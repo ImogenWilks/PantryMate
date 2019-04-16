@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
     >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="10dp"
         android:fillViewport="true">
 
         <LinearLayout
@@ -23,109 +20,88 @@
             >
 
             <TextView
-                android:id="@+id/aboutTitle"
+                android:id="@+id/addTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="ABOUT"
+                android:text="ADD"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_gravity="center"
                 android:textColor="@color/colorPrimaryDark"
                 />
 
             <TextView
-                android:id="@+id/helpIntro"
+                android:id="@+id/addIntro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:text="@string/helpIntro"
+                android:text="@string/shopAddExplain"
                 android:textAppearance="@style/TextAppearance.AppCompat"
-                android:gravity="center"/>
-
+                />
             <TextView
                 android:id="@+id/editTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16sp"
+                android:layout_marginBottom="16dp"
                 android:text="EDIT"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_gravity="center"
                 android:textColor="@color/colorPrimaryDark"
                 />
 
             <TextView
-                android:id="@+id/helpEdit"
+                android:id="@+id/editIntro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:text="@string/helpEdit"
+                android:text="@string/editExplain"
                 android:textAppearance="@style/TextAppearance.AppCompat"
-                android:gravity="center"/>
+                />
+            <TextView
+                android:id="@+id/deleteTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="REMOVE"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                />
 
             <TextView
-                android:id="@+id/cameraTitle"
+                android:id="@+id/deleteIntro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="CAMERA"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 android:layout_gravity="center"
-                android:textColor="@color/colorPrimaryDark"
-                />
-            <TextView
-                android:id="@+id/helpCamera"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="@string/helpCamera"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:gravity="center"/>
-            <TextView
-                android:id="@+id/BarcodeTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="BARCODE"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                android:textColor="@color/colorPrimaryDark"
-                />
-            <TextView
-                android:id="@+id/helpBarcode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/helpBarcode"
+                android:text="@string/deleteExplain"
                 android:textAppearance="@style/TextAppearance.AppCompat"
-                android:gravity="center"/>
+                />
+
             <TextView
-                android:id="@+id/contactTitle"
+                android:id="@+id/tickTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="CONTACT US"
+                android:text="TICK OFF"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_gravity="center"
                 android:textColor="@color/colorPrimaryDark"
                 />
+
             <TextView
-                android:id="@+id/helpContact"
-                android:layout_width="match_parent"
+                android:id="@+id/tickIntro"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/helpContact"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:text="@string/shopTickExplain"
                 android:textAppearance="@style/TextAppearance.AppCompat"
-                android:gravity="center"/>
+                />
 
         </LinearLayout>
     </ScrollView>
-
-    <include layout="@layout/toolbar" />
 
 </RelativeLayout>
