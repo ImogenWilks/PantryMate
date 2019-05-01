@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -28,6 +29,7 @@ public class editCheck extends AppCompatActivity {
     private DatabaseHelper db,db1,db2;
     private EditText cname,cexpiry,cquantity;
     private Button submitBtn;
+    private ImageButton cameraBtn,shoppingBtn,barcodeBtn,receiptBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,42 @@ public class editCheck extends AppCompatActivity {
         cname.setText(name);
         cexpiry.setText(expiry);
         cquantity.setText(quantity);
+
+        cameraBtn=findViewById(R.id.cameraBtn);
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(editCheck.this, Camera.class);
+                startActivity(i);
+            }
+        });
+
+        shoppingBtn=findViewById(R.id.shoppingBtn);
+        shoppingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(editCheck.this, ShoppingList.class);
+                startActivity(i);
+            }
+        });
+
+        receiptBtn=findViewById(R.id.receiptBtn);
+        receiptBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(editCheck.this, receipt.class);
+                startActivity(i);
+            }
+        });
+
+        barcodeBtn=findViewById(R.id.barcodeBtn);
+        barcodeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(editCheck.this, barcode.class);
+                startActivity(i);
+            }
+        });
 
         submitBtn = findViewById(R.id.changeItem);
         submitBtn.setOnClickListener(new View.OnClickListener() {

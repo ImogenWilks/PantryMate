@@ -23,11 +23,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import database.DBPantry;
+import database.DatabaseHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -43,8 +49,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static android.provider.MediaStore.Images.Media.getBitmap;
 import static java.security.AccessController.getContext;
@@ -59,6 +69,12 @@ public class receipt extends AppCompatActivity {
     Bitmap bitmap = null;
     Uri resultUri;
     Bitmap image = null;
+    private RecyclerView nRecyclerView;
+    private Adapter nAdapter;
+    private RecyclerView.LayoutManager nlayoutManager;
+    private DatabaseHelper db1,db;
+    ArrayList<Items> itemList = new ArrayList<>();
+    Button addAll,helpBut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +82,59 @@ public class receipt extends AppCompatActivity {
         setContentView(R.layout.activity_receipt);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        db1 = new DatabaseHelper(this, "receipt.db");
+        db1 = new DatabaseHelper(this, "pantry.db");
+
+        itemList = getPantry();
+
+        nRecyclerView = findViewById(R.id.ListRecyclerView);
+        nRecyclerView.setHasFixedSize(true);
+        nlayoutManager = new LinearLayoutManager(this);
+        nAdapter = new Adapter(itemList);
+        nRecyclerView.setLayoutManager(nlayoutManager);
+        nRecyclerView.setAdapter(nAdapter);
+
+        addAll = (Button) findViewById(R.id.addPantry);
+        addAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (Items tempItem : itemList){
+                    db.insertFood(tempItem.getText1(),tempItem.getText2(),Integer.parseInt(tempItem.getText3()));
+                }
+
+                itemList.clear();
+                nAdapter.notifyDataSetChanged();
+                db1.deleteAll();
+                Toast.makeText(receipt.this, "Added to pantry", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        helpBut= (Button) findViewById(R.id.instructions);
+        helpBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+
+            }
+        });
+
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT ) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder target, int i) {
+                int position = target.getAdapterPosition();
+                removeItem(itemList.get(position).getText1(),itemList.get(position).getDateAdded());
+                itemList.remove(position);
+                nAdapter.notifyDataSetChanged();
+
+            }
+        });
+        helper.attachToRecyclerView(nRecyclerView);
     }
 
     @Override
@@ -208,13 +277,16 @@ public class receipt extends AppCompatActivity {
 
             for (int i = 0; i < textBlocks.size(); i++) {
                 TextBlock textBlock = textBlocks.get(textBlocks.keyAt(i));
-
                 stringBuilder.append(textBlock.getValue()) ;
+
                 stringBuilder.append("\n");
 
-                mtextView = (EditText) findViewById(R.id.mtextView);
-                mtextView.setText(stringBuilder.toString());
+
             }
+
+            addItem(stringBuilder.toString());
+            recreate();
+
         }
     }
 
@@ -244,6 +316,56 @@ public class receipt extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    private void addItem(String items)
+    {
+        String[] tempItemList = items.split("\n");
+        Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.WEEK_OF_MONTH, 1);
+
+        Date expiryDate=c.getTime();
+        String expiryString=formatter.format(expiryDate);
+
+        for ( String item : tempItemList)
+        {
+            System.out.println("THE ITEM IS "+ item);
+            db1.insertFood(item,expiryString,1);
+
+        }
+        nAdapter.notifyDataSetChanged();
+
+
+    }
+
+    private ArrayList<Items> getPantry() {
+        ArrayList<Items> itemList = new ArrayList<>();
+        // returns a list of the pantry
+        // use pantryList[x].getVariableName() to get values from the list
+        List<DBPantry> pantryList = db1.fetchPantryAll();
+
+        for (DBPantry tempPantry : pantryList) {
+            // adds the new food item to the item list
+            itemList.add(new Items(tempPantry.getName(),tempPantry.getDateExpiry(),Integer.toString(tempPantry.getAmount()), tempPantry.getDateAdded()));
+        }
+
+        return itemList;
+    }
+
+    private void removeItem(String foodName, String dateAdded) {
+        //removes the item from the table, pass food name and dateadded
+        db1.deleteFood(foodName, dateAdded);
+
+    }
+
+    public void openDialog() {
+        receiptDialog addDialogue = new receiptDialog();
+        addDialogue.show(getSupportFragmentManager(),"help");
+
     }
 }
 

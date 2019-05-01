@@ -7,7 +7,7 @@
     <string name="Help">Help</string>
     <string name="title_activity_edit">Pantry</string>
     <string name="title_activity_camera">Camera</string>
-    <string name="title_activity_barcode">barcode</string>
+    <string name="title_activity_barcode">Barcode</string>
     <string name="code_scanner">Code Scanner</string>
     <string name="scan_result">Scan result</string>
     <string name="scanner_error">Scanner error: %s</string>
@@ -26,7 +26,7 @@
     <string name="shopAddExplain">"To add an item simply click the + button to the left of the screen and fill in the details. Don't worry about the expiry date, this will added when you scan or tick an item off your list!</string>
     <string name="shopRemoveExplain">To remove an item all you need to do is swipe from right to left!</string>
     <string name="shopTickExplain">To tick an item off your list you can either press the scan button and scan a valid barcode or you can simply swipe from left to right. After ticking off an item it will be automatically added to your pantry.</string>
-    <string name="title_activity_receipt">receipt</string>
+    <string name="title_activity_receipt">Receipt</string>
     <string name="camera">Camera</string>
     <string name="button">Button</string>
     <string name="textview">TextView</string>
@@ -37,4 +37,10 @@
     <string name="partialInstructions">The item you\'ve scanned partially matches the following, simply click the item to check it off your list!</string>
     <string name="noMatchTitle">No Matches Found</string>
     <string name="NoMatch2">Alternatively if you\'ve bought something not on your list, press add and we\'ll put it into your pantry for you.</string>
+    <string name="receiptAdd">To add an item manually simply click the + button and fill in the details, don\'t worry about the expiry date for now.</string>
+    <string name="scanExplain">To scan a receipt press the scan button and take a clear picture of your receipt in good lighting. You will then be prompted to crop the receipt, please do this around the food item names only (excluding quantity). If its read in wrong don\'t worry, you can edit it afterwards.</string>
+    <string name="addExplain2">To add your scanned results into your main pantry simply click the \'add to pantry\' button at the bottom.</string>
+    <string name="barcodeExplain">To scan a barcode press the \'scan barcode\' button and take a clear picture of your barcode. You will then get a pop up with the name of your item. You can re-try if this is incorrect or manually add it for barcode information that can not be found.</string>
+    <string name="notificationTitle">Food Expiring Soon</string>
+    <string name="titlePantry">Pantry Items</string>
 </resources>

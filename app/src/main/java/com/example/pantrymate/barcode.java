@@ -37,7 +37,7 @@ public class barcode extends AppCompatActivity {
     private RecyclerView nRecyclerView;
     private Adapter nAdapter;
     private RecyclerView.LayoutManager nlayoutManager;
-    private DatabaseHelper db1;
+    private DatabaseHelper db1,db;
     ArrayList<Items> itemList = new ArrayList<>();
 
 
@@ -51,6 +51,7 @@ public class barcode extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         db1 = new DatabaseHelper(this, "shopping.db");
+        db = new DatabaseHelper(this,"pantry.db");
         itemList = getPantry();
 
         Bundle bundle = getIntent().getExtras();
@@ -90,7 +91,7 @@ public class barcode extends AppCompatActivity {
         nAdapter = new Adapter(itemList);
         nRecyclerView.setLayoutManager(nlayoutManager);
         nRecyclerView.setAdapter(nAdapter);
-        Button addbut;
+        Button addbut,addAll,helpBut;
 
         nAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
@@ -128,10 +129,28 @@ public class barcode extends AppCompatActivity {
         });
         helper.attachToRecyclerView(nRecyclerView);
 
+        addAll = (Button) findViewById(R.id.addPantry);
+        addAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (Items tempItem : itemList){
+                    db.insertFood(tempItem.getText1(),tempItem.getText2(),Integer.parseInt(tempItem.getText3()));
+                }
+                itemList.clear();
+                nAdapter.notifyDataSetChanged();
+                Toast.makeText(barcode.this, "Added to pantry", Toast.LENGTH_SHORT).show();
+                db1.deleteAll();
+            }
+        });
 
+        helpBut= (Button) findViewById(R.id.instructions);
+        helpBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
 
-
-
+            }
+        });
 
         addbut = (Button) findViewById(R.id.addItem);
         addbut.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +235,12 @@ public class barcode extends AppCompatActivity {
     private void removeItem(String foodName, String dateAdded) {
         //removes the item from the table, pass food name and dateadded
         db1.deleteFood(foodName, dateAdded);
+
+    }
+
+    public void openDialog() {
+        barcodeDialog addDialogue = new barcodeDialog();
+        addDialogue.show(getSupportFragmentManager(),"help");
 
     }
 }

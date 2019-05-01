@@ -1,5 +1,7 @@
 package com.example.pantrymate;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +9,11 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -73,7 +80,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Intent intent = new Intent(this,AlarmReceiver.class);
+        PendingIntent broadcast = PendingIntent.getBroadcast(this,createID(),intent,0);
 
+        AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Calendar calender = Calendar.getInstance();
+        calender.set(Calendar.HOUR,12);
+        calender.set(Calendar.MINUTE, 0);
+        calender.set(Calendar.SECOND, 1);
+
+
+
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, calender.getTimeInMillis(),alarm.INTERVAL_DAY,broadcast);
+
+    }
+
+    public int createID(){
+        Date now = new Date();
+        int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.UK).format(now));
+        return id;
     }
 
     public void openEdit(){

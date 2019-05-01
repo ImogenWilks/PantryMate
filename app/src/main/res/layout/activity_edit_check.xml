@@ -11,6 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:id="@+id/topLinear"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@+id/toolbar"
@@ -82,4 +83,62 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/topLinear"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:weightSum="4">
+
+
+        <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+            android:id="@+id/cameraBtn"
+            android:layout_gravity="center"
+        android:background="@color/colorPrimaryDark"
+        android:weightSum="1"
+        android:scaleType="centerInside"
+        android:src="@drawable/camera"
+        />
+
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/barcodeBtn"
+            android:background="@color/colorPrimaryDark"
+            android:weightSum="1"
+            android:scaleType="centerInside"
+            android:layout_gravity="center"
+            android:src="@drawable/barcode"
+            android:layout_marginLeft="20dp"/>
+
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@color/colorPrimaryDark"
+            android:weightSum="1"
+            android:scaleType="centerInside"
+            android:id="@+id/receiptBtn"
+            android:layout_gravity="center"
+            android:src="@drawable/menu"
+            android:layout_marginLeft="20dp"/>
+
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@color/colorPrimaryDark"
+            android:weightSum="1"
+            android:scaleType="centerInside"
+            android:layout_gravity="center"
+            android:id="@+id/shoppingBtn"
+            android:src="@drawable/shopping"
+            android:layout_marginLeft="20dp"/>
+
+
+
+
+    </LinearLayout>
 </RelativeLayout>
