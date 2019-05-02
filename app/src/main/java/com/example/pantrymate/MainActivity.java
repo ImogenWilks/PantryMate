@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        edit = (Button) findViewById(R.id.edit);
+        edit = findViewById(R.id.edit);
         edit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        help= (Button) findViewById(R.id.help);
+        help= findViewById(R.id.help);
         help.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        camera = (Button) findViewById(R.id.camera);
+        camera = findViewById(R.id.camera);
         camera.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        barcode = (Button) findViewById(R.id.barcode);
+        barcode = findViewById(R.id.barcode);
         barcode.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        shopping = (Button) findViewById(R.id.shopping);
+        shopping = findViewById(R.id.shopping);
         shopping.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        receipt = (Button) findViewById(R.id.receiptBtn);
+        receipt = findViewById(R.id.receiptBtn);
         receipt.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -85,13 +85,11 @@ public class MainActivity extends AppCompatActivity {
 
         AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
         Calendar calender = Calendar.getInstance();
-        calender.set(Calendar.HOUR,12);
-        calender.set(Calendar.MINUTE, 0);
-        calender.set(Calendar.SECOND, 1);
+        calender.set(Calendar.HOUR_OF_DAY,12);
 
 
 
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, calender.getTimeInMillis(),alarm.INTERVAL_DAY,broadcast);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, calender.getTimeInMillis(), AlarmManager.INTERVAL_DAY,broadcast);
 
     }
 
