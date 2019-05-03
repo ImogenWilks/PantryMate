@@ -115,6 +115,7 @@ public class ShoppingList extends AppCompatActivity {
                 nAdapter.notifyDataSetChanged();
                 Toast.makeText(ShoppingList.this, "Item removed from shopping list", Toast.LENGTH_SHORT).show();
 
+
             }
 
         });
@@ -128,9 +129,11 @@ public class ShoppingList extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder target, int i) {
                 int position = target.getAdapterPosition();
+                db1.transferItemToPantry(ShoppingList.this, itemList.get(position).getText1(),itemList.get(position).getDateAdded());
                 itemList.remove(position);
                 nAdapter.notifyDataSetChanged();
                 Toast.makeText(ShoppingList.this, "Item added to pantry", Toast.LENGTH_SHORT).show();
+
 
             }
 
