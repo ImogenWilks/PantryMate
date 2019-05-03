@@ -167,7 +167,7 @@ public class Camera extends AppCompatActivity {
                     }
                 }
                 //saveImage(Integer.toString(fileCount++) + ".png", currentImage);
-                detectObjects(FirebaseVisionImage.fromBitmap(img));
+                detectObjects(FirebaseVisionImage.fromBitmap(currentImage));
 
             }
         }
