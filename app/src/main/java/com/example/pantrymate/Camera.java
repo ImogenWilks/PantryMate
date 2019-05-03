@@ -3,6 +3,7 @@ package com.example.pantrymate;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -139,7 +140,74 @@ public class Camera extends AppCompatActivity {
         detectObjects(image);
         detectText(image);
 
-        imageFile.delete();
+        //Bitmap test = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.ARGB_8888);
+
+        int incX = img.getWidth() / 5;
+        int incY = img.getHeight() / 5;
+
+        int fileCount = 1;
+
+        for (int x1 = 0; x1 < img.getWidth() - incX; x1 += incX)
+        {
+            for (int y1 = 0; y1 < img.getHeight() - incY; y1 += incY)
+            {
+                Bitmap currentImage = Bitmap.createBitmap(incX, incY, Bitmap.Config.ARGB_8888);
+                for (int x = 0; x < currentImage.getWidth(); x++)
+                {
+                    for (int y = 0; y < currentImage.getHeight(); y++)
+                    {
+                        try
+                        {
+                            currentImage.setPixel(x,y, img.getPixel(x + x1,y + y1));
+                        }
+                        catch (Exception ex)
+                        {
+                            saveToFile(ex.toString());
+                        }
+                    }
+                }
+                //saveImage(Integer.toString(fileCount++) + ".png", currentImage);
+                detectObjects(FirebaseVisionImage.fromBitmap(img));
+
+            }
+        }
+
+        /*for (int x = 0; x < test.getWidth(); x++)
+        {
+            for (int y = 0; y < test.getHeight(); y++)
+            {
+                test.setPixel(x,y, img.getPixel(x,y));
+            }
+        }*/
+
+        //saveImage("Test.png", test);
+
+        //imageFile.delete();
+    }
+
+    void saveImage(String fileName, Bitmap img)
+    {
+        //Stores the image to a file on the phone
+
+        try {
+            File f = new File(Environment.getExternalStorageDirectory().toString(), fileName);
+            FileOutputStream out = new FileOutputStream(f);
+
+            img.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            saveToFile(e.toString());
+        } catch (IOException ex)
+        {
+            saveToFile(ex.getMessage());
+        }
+        catch (NullPointerException ex)
+        {
+            saveToFile(ex.toString());
+        }
+
+
     }
 
     void detectObjects(FirebaseVisionImage image)
@@ -224,7 +292,7 @@ public class Camera extends AppCompatActivity {
     }
 
 
-    public static boolean saveToFile( String data){
+    public static boolean saveToFile(String data){
 
         try {
             new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "Visontest.txt" ).mkdir();
