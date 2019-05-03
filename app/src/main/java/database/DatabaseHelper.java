@@ -115,7 +115,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     }
-
     public void transferItemToPantry(Context context, String itemName, String dateAdded) {
         DatabaseHelper shoppingDB = this;
         DatabaseHelper pantryDB = new DatabaseHelper(context, "pantry.db");

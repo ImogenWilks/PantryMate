@@ -129,8 +129,17 @@ public class ShoppingList extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder target, int i) {
                 int position = target.getAdapterPosition();
-                db1.transferItemToPantry(ShoppingList.this, itemList.get(position).getText1(),itemList.get(position).getDateAdded());
-                itemList.remove(position);
+
+                //either uncomment these two or the single one, not both
+
+                //Uncomment these two lines to make it move an item and all its quantity over to the pantry
+               // db1.transferItemToPantry(ShoppingList.this, itemList.get(position).getText1(),itemList.get(position).getDateAdded());
+                //itemList.remove(position);
+
+                //Uncommend this line to make it only remove one from the quantity.
+                tickOff(itemList.get(position).getText1());
+
+
                 nAdapter.notifyDataSetChanged();
                 Toast.makeText(ShoppingList.this, "Item added to pantry", Toast.LENGTH_SHORT).show();
 
