@@ -232,18 +232,35 @@ public class Camera extends AppCompatActivity {
                 }
 
                 String data = "Response:";
-
+                ArrayList<String> endResults = new ArrayList<String>();
                 for (String s: visionResultsList)
                 {
                     for (String currentFood: foodList)
                     {
                         if (s.contains(currentFood))
                         {
-                            data += currentFood + "\n";
+                            boolean contains = false;
+                            for (String currentResult : endResults)
+                            {
+                                if (currentFood == currentResult)
+                                {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if (!contains)
+                            {
+                                endResults.add(currentFood);
+                            }
+
                         }
                     }
 
+                }
 
+                for (String currentResult : endResults)
+                {
+                    data += currentResult + "\n";
                 }
 
                 EditText e = (EditText) findViewById(R.id.itemListTextView);
