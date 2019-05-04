@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -39,6 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.net.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Camera extends AppCompatActivity {
@@ -49,13 +51,25 @@ public class Camera extends AppCompatActivity {
     EditText itemListTextView;
     String currentPhotoPath = null;
     File imageFile = null;
-    int numOfResume = 0;
-    
+
+    //Used to filter out non food items from vision results
+    ArrayList<String> foodList = new ArrayList<String>();
+    //Stores results of object recognition
+    ArrayList<String> visionResultsList = new ArrayList<String>();
+    //Used to determin when all results have been recieved
+    volatile int numOfResponses = 0;
+    volatile  boolean recievedText = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        foodList.add("Apple");
+        foodList.add("Banana");
+        foodList.add("Grape");
+        foodList.add("Cucumber");
+        foodList.add("Pineapple");
+
         itemListTextView = (EditText) findViewById(R.id.itemListTextView);
         setContentView(R.layout.activity_camera);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -131,8 +145,6 @@ public class Camera extends AppCompatActivity {
                     saveToFile(ex.toString());
                 }
 
-                //saveToFile("point a");
-
             }
         }
     }
@@ -150,6 +162,10 @@ public class Camera extends AppCompatActivity {
 
 
         FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(img);
+
+        numOfResponses = 0;
+        recievedText = false;
+        visionResultsList = new ArrayList<String>();
 
         detectObjects(image);
         detectText(image);
@@ -186,12 +202,58 @@ public class Camera extends AppCompatActivity {
                     }
                 }
                 //saveImage(Integer.toString(fileCount++) + ".png", currentImage);
-                //detectObjects(FirebaseVisionImage.fromBitmap(currentImage));
+                detectObjects(FirebaseVisionImage.fromBitmap(currentImage));
 
             }
         }
 
+        new AsyncTask<Void,Void,Void>(){
 
+            @Override
+            protected Void doInBackground(Void ...params) {
+
+                int timer = 0;
+                //Waits until its recieved responses for all image segments
+                while (numOfResponses < 26 && timer < 15)
+                {
+                    try {
+                        EditText e = (EditText) findViewById(R.id.itemListTextView);
+                        CharSequence newchars = numOfResponses + " / 26";
+                        e.setText(newchars);
+                        Thread.sleep(1000);
+                        timer++;
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                    catch (Exception ex)
+                    {
+                        saveToFile(ex.toString());
+                    }
+                }
+
+                String data = "Response:";
+
+                for (String s: visionResultsList)
+                {
+                    for (String currentFood: foodList)
+                    {
+                        if (s.contains(currentFood))
+                        {
+                            data += currentFood + "\n";
+                        }
+                    }
+
+
+                }
+
+                EditText e = (EditText) findViewById(R.id.itemListTextView);
+                CharSequence newchars = e.getText() + data;
+                e.setText(newchars);
+
+                return null;
+            }
+
+        }.execute();
 
         imageFile.delete();
     }
@@ -232,22 +294,14 @@ public class Camera extends AppCompatActivity {
                         // Task completed successfully
                         // ...
                         //Loops through each object that was recognised
-                        String data = "Image recognition:\n";
+
                         for (FirebaseVisionImageLabel label: labels) {
                             String text = label.getText();
-                            String entityId = label.getEntityId();
-                            float confidence = label.getConfidence();
-                            data += "Text: " + text + ", confidence: " + Float.toString(confidence) + "\n";
-
+                            visionResultsList.add(text);
                         }
-
-                        data += "-------\n\n";
-
-                        //Displays each item detected on screen
-                        EditText e = (EditText) findViewById(R.id.itemListTextView);
-                        CharSequence newchars = e.getText() + data;
-                        e.setText(newchars);
+                        numOfResponses++;
                     }
+
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -255,10 +309,7 @@ public class Camera extends AppCompatActivity {
                         // Task failed with an exception
                         // ...
 
-                        String data = "Object recognition failed!:\n\n" + ex.toString();
-                        EditText e = (EditText) findViewById(R.id.itemListTextView);
-                        CharSequence newchars = e.getText() + data;
-                        e.setText(newchars);
+                        numOfResponses++;
                     }
                 });
 
@@ -282,6 +333,8 @@ public class Camera extends AppCompatActivity {
                                 EditText e = (EditText) findViewById(R.id.itemListTextView);
                                 CharSequence newchars = e.getText() + data;
                                 e.setText(newchars);
+
+
 
 
                             }
