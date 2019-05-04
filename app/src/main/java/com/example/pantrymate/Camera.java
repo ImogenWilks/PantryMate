@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,6 +49,9 @@ public class Camera extends AppCompatActivity {
     EditText itemListTextView;
     String currentPhotoPath = null;
     File imageFile = null;
+    int numOfResume = 0;
+    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,14 @@ public class Camera extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
+    }
+
+    @Override
+    protected void 	onPostResume()
+    {
+        super.onPostResume();
+
+        Toast.makeText(this, "Test", Toast.LENGTH_LONG).show();
     }
 
     private File createImageFile() throws IOException {
@@ -119,6 +131,8 @@ public class Camera extends AppCompatActivity {
                     saveToFile(ex.toString());
                 }
 
+                //saveToFile("point a");
+
             }
         }
     }
@@ -139,6 +153,11 @@ public class Camera extends AppCompatActivity {
 
         detectObjects(image);
         detectText(image);
+
+        if (img.getWidth() * img.getHeight() > 3000000)
+        {
+            img = Bitmap.createScaledBitmap(img, img.getWidth() / 2, img.getHeight() / 2, true);
+        }
 
         //Bitmap test = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.ARGB_8888);
 
@@ -167,22 +186,14 @@ public class Camera extends AppCompatActivity {
                     }
                 }
                 //saveImage(Integer.toString(fileCount++) + ".png", currentImage);
-                detectObjects(FirebaseVisionImage.fromBitmap(currentImage));
+                //detectObjects(FirebaseVisionImage.fromBitmap(currentImage));
 
             }
         }
 
-        /*for (int x = 0; x < test.getWidth(); x++)
-        {
-            for (int y = 0; y < test.getHeight(); y++)
-            {
-                test.setPixel(x,y, img.getPixel(x,y));
-            }
-        }*/
 
-        //saveImage("Test.png", test);
 
-        //imageFile.delete();
+        imageFile.delete();
     }
 
     void saveImage(String fileName, Bitmap img)
@@ -250,6 +261,7 @@ public class Camera extends AppCompatActivity {
                         e.setText(newchars);
                     }
                 });
+
     }
 
     void detectText(FirebaseVisionImage image)
@@ -321,8 +333,11 @@ public class Camera extends AppCompatActivity {
         {
             Bitmap image = BitmapFactory.decodeFile(currentPhotoPath);
             segmentImage(image);
+            //saveToFile("point b");
         }
     }
+
+
 
 
     public void sendNetworkDataTest(Bitmap img) throws IOException
