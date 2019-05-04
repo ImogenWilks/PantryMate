@@ -59,11 +59,16 @@ public class Camera extends AppCompatActivity {
     //Used to determin when all results have been recieved
     volatile int numOfResponses = 0;
     volatile  boolean recievedText = false;
+    volatile String textResults = "";
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Note:
+        //Add what ever food you want to account for in the food list
         foodList.add("Apple");
         foodList.add("Banana");
         foodList.add("Grape");
@@ -113,6 +118,8 @@ public class Camera extends AppCompatActivity {
         return true;
     }
 
+    //Note:
+    //Call this when you want to open the camera
     public void dispatchCameraIntent()
     {
         //Opens the camera in the app
@@ -165,6 +172,7 @@ public class Camera extends AppCompatActivity {
 
         numOfResponses = 0;
         recievedText = false;
+        textResults = "";
         visionResultsList = new ArrayList<String>();
 
         detectObjects(image);
@@ -174,8 +182,6 @@ public class Camera extends AppCompatActivity {
         {
             img = Bitmap.createScaledBitmap(img, img.getWidth() / 2, img.getHeight() / 2, true);
         }
-
-        //Bitmap test = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.ARGB_8888);
 
         int incX = img.getWidth() / 5;
         int incY = img.getHeight() / 5;
@@ -201,7 +207,6 @@ public class Camera extends AppCompatActivity {
                         }
                     }
                 }
-                //saveImage(Integer.toString(fileCount++) + ".png", currentImage);
                 detectObjects(FirebaseVisionImage.fromBitmap(currentImage));
 
             }
@@ -214,6 +219,7 @@ public class Camera extends AppCompatActivity {
 
                 int timer = 0;
                 //Waits until its recieved responses for all image segments
+                //Times out after 15 seconds
                 while (numOfResponses < 26 && timer < 15)
                 {
                     try {
@@ -227,12 +233,19 @@ public class Camera extends AppCompatActivity {
                     }
                     catch (Exception ex)
                     {
-                        saveToFile(ex.toString());
+                        ex.printStackTrace();
                     }
                 }
 
-                String data = "Response:";
+                //Note:
+                //Used to display on screen in text view, you can remove this
+                String data = "Response:\n";
+
+
+                //Stores results to be added to the ui
                 ArrayList<String> endResults = new ArrayList<String>();
+
+                //Loops through object results
                 for (String s: visionResultsList)
                 {
                     for (String currentFood: foodList)
@@ -255,17 +268,51 @@ public class Camera extends AppCompatActivity {
 
                         }
                     }
+                }
 
+                //Add string results
+                String [] words = textResults.split(" ");
+
+                for (String s: words)
+                {
+                    for (String currentFood: foodList)
+                    {
+                        if (s.contains(currentFood))
+                        {
+                            boolean contains = false;
+                            for (String currentResult : endResults)
+                            {
+                                if (currentFood == currentResult)
+                                {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if (!contains)
+                            {
+                                endResults.add(currentFood);
+                            }
+
+                        }
+                    }
                 }
 
                 for (String currentResult : endResults)
                 {
+                    //Note:
+                    //Add current result to UI
+
+                    //Note:
+                    //Used to display on screen in text view, you can remove this
                     data += currentResult + "\n";
                 }
 
+                //Note:
+                //Used to display on screen in text view, you can remove this
                 EditText e = (EditText) findViewById(R.id.itemListTextView);
                 CharSequence newchars = e.getText() + data;
                 e.setText(newchars);
+                //End of note
 
                 return null;
             }
