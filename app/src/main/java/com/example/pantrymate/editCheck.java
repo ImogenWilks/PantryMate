@@ -26,7 +26,7 @@ import database.DatabaseHelper;
 
 public class editCheck extends AppCompatActivity {
 
-    private DatabaseHelper db,db1,db2;
+    private DatabaseHelper db,db1,db2,db3,db4;
     private EditText cname,cexpiry,cquantity;
     private Button submitBtn;
     private ImageButton cameraBtn,shoppingBtn,barcodeBtn,receiptBtn;
@@ -38,8 +38,10 @@ public class editCheck extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         db = new DatabaseHelper(this, "pantry.db");
-        db1 = new DatabaseHelper(this, "shopping.db");
+        db1 = new DatabaseHelper(this, "shopping.db"); //barcode
         db2 = new DatabaseHelper(this,"list.db");
+        db3 = new DatabaseHelper(this,"receipt.db");
+        db4 = new DatabaseHelper(this,"Camera.db");
 
         Bundle bundle = getIntent().getExtras();
 
@@ -130,6 +132,14 @@ public class editCheck extends AppCompatActivity {
                         Intent i = new Intent(editCheck.this, Edit.class);
                         startActivity(i);
                     }
+                    else if (activity.equals("camera")){
+                        Intent i = new Intent(editCheck.this, Camera.class);
+                        startActivity(i);
+                    }
+                    else if (activity.equals("receipt")){
+                        Intent i = new Intent(editCheck.this,receipt.class);
+                        startActivity(i);
+                    }
                     else
                      {
                         Intent i = new Intent(editCheck.this, ShoppingList.class);
@@ -199,6 +209,8 @@ public class editCheck extends AppCompatActivity {
         if (pantry==1){db.updateFood(tempPantry,oldFoodName,dateAdded);}
         else if (pantry ==2){ db1.updateFood(tempPantry, oldFoodName, dateAdded);}
         else if (pantry==3){db2.updateFood(tempPantry,oldFoodName,dateAdded);}
+        else if (pantry==4) {db3.updateFood(tempPantry,oldFoodName,dateAdded);}
+        else{db4.updateFood(tempPantry,oldFoodName,dateAdded);}
     }
 
     private void addItem(String foodName, String expiry, int amount,int pantry) {
@@ -206,6 +218,8 @@ public class editCheck extends AppCompatActivity {
         if (pantry==1){db.insertFood(foodName,expiry,amount);}
         else if (pantry==2){ db1.insertFood(foodName, expiry, amount);}
         else if (pantry==3){db2.insertFood(foodName,expiry,amount);}
+        else if (pantry==4) {db3.insertFood(foodName,expiry,amount);}
+        else{db4.insertFood(foodName,expiry,amount);}
     }
 
     @Override
@@ -232,6 +246,14 @@ public class editCheck extends AppCompatActivity {
             case R.id.Barcode:
                 Intent intentBarcode = new Intent(this, barcode.class);
                 startActivity(intentBarcode);
+                return true;
+            case R.id.ShoppingList:
+                Intent intentShopping = new Intent(this, ShoppingList.class);
+                startActivity(intentShopping);
+                return true;
+            case R.id.Receipt:
+                Intent intentReceipt = new Intent(this, receipt.class);
+                startActivity(intentReceipt);
                 return true;
             case R.id.Help:
                 Intent intentHelp = new Intent(this, Help.class);

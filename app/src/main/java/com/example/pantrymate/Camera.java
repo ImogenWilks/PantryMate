@@ -1,5 +1,6 @@
 package com.example.pantrymate;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,16 +9,23 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import database.DBPantry;
+import database.DatabaseHelper;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -39,8 +47,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.lang.reflect.Array;
 import java.net.*;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Camera extends AppCompatActivity {
@@ -53,32 +67,136 @@ public class Camera extends AppCompatActivity {
     File imageFile = null;
 
     //Used to filter out non food items from vision results
-    ArrayList<String> foodList = new ArrayList<String>();
+    List<String> foodList = Arrays.asList("Apple","Banana","Grape","Cucumber","Pineapple","Carrot","Tomato","Lettuce","Onion","Bell Pepper");
     //Stores results of object recognition
     ArrayList<String> visionResultsList = new ArrayList<String>();
-    //Used to determin when all results have been recieved
+    //Used to determine when all results have been recieved
     volatile int numOfResponses = 0;
     volatile  boolean recievedText = false;
+    Button addBut,addAll,helpBut;
     volatile String textResults = "";
-
+    private RecyclerView nRecyclerView;
+    private Adapter nAdapter;
+    private RecyclerView.LayoutManager nlayoutManager;
+    private DatabaseHelper db,db1;
+    ArrayList<Items> itemList = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Note:
-        //Add what ever food you want to account for in the food list
-        foodList.add("Apple");
-        foodList.add("Banana");
-        foodList.add("Grape");
-        foodList.add("Cucumber");
-        foodList.add("Pineapple");
-
-        itemListTextView = (EditText) findViewById(R.id.itemListTextView);
         setContentView(R.layout.activity_camera);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        db = new DatabaseHelper(this, "Camera.db");
+        db1 = new DatabaseHelper(this,"pantry.db");
+
+        itemList = getPantry();
+
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            Toast.makeText(Camera.this, "Processing Complete", Toast.LENGTH_SHORT).show();
+
+        }
+
+        nRecyclerView = findViewById(R.id.ListRecyclerView);
+        nRecyclerView.setHasFixedSize(true);
+        nlayoutManager = new LinearLayoutManager(this);
+        nAdapter = new Adapter(itemList);
+        nRecyclerView.setLayoutManager(nlayoutManager);
+        nRecyclerView.setAdapter(nAdapter);
+
+        nAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                Intent i = new Intent(Camera.this, editCheck.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name", itemList.get(position).getText1());
+                bundle.putString("expiry", itemList.get(position).getText2());
+                bundle.putString("quantity", itemList.get(position).getText3());
+                bundle.putString("date", itemList.get(position).getDateAdded());
+                bundle.putInt("Add", 2); //updating;
+                bundle.putInt("pantry",5);
+                bundle.putString("activity","camera");
+                i.putExtras(bundle);
+                startActivity(i);
+            }
+
+        });
+
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT ) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder target, int i) {
+                int position = target.getAdapterPosition();
+                removeItem(itemList.get(position).getText1(),itemList.get(position).getDateAdded());
+                itemList.remove(position);
+                nAdapter.notifyDataSetChanged();
+
+            }
+        });
+        helper.attachToRecyclerView(nRecyclerView);
+
+        helpBut= (Button) findViewById(R.id.instructions);
+        helpBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+
+            }
+        });
+
+
+        addBut = (Button) findViewById(R.id.addItem);
+        addBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = new Date();
+                String dateString=formatter.format(date);
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                c.add(Calendar.WEEK_OF_MONTH, 1);
+                Date expiryDate=c.getTime();
+                String expiryString=formatter.format(expiryDate);
+
+
+                Intent i = new Intent(Camera.this, editCheck.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name","");
+                bundle.putString("expiry",expiryString);
+                bundle.putString("quantity","");
+                bundle.putString("date","");
+                bundle.putInt("Add",1);
+                bundle.putInt("pantry",5);
+                bundle.putString("activity","camera");
+                i.putExtras(bundle);
+                startActivity(i);
+
+
+            }
+        });
+
+        addAll = (Button) findViewById(R.id.addPantry);
+        addAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (Items tempItem : itemList){
+                    db1.insertFood(tempItem.getText1(),tempItem.getText2(),Integer.parseInt(tempItem.getText3()));
+                }
+
+                itemList.clear();
+                nAdapter.notifyDataSetChanged();
+                db.deleteAll();
+                Toast.makeText(Camera.this, "Added to pantry", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -91,8 +209,6 @@ public class Camera extends AppCompatActivity {
     protected void 	onPostResume()
     {
         super.onPostResume();
-
-        Toast.makeText(this, "Test", Toast.LENGTH_LONG).show();
     }
 
     private File createImageFile() throws IOException {
@@ -162,12 +278,10 @@ public class Camera extends AppCompatActivity {
         dispatchCameraIntent();
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void segmentImage(Bitmap img)
     {
-        //TODO:
-        //Implement code which segemnts the image
-
-
+        Toast.makeText(Camera.this, "Processing", Toast.LENGTH_SHORT).show();
         FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(img);
 
         numOfResponses = 0;
@@ -216,16 +330,13 @@ public class Camera extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void ...params) {
-
                 int timer = 0;
                 //Waits until its recieved responses for all image segments
                 //Times out after 15 seconds
-                while (numOfResponses < 26 && timer < 15)
+                while (numOfResponses < 26 && timer < 25)
                 {
                     try {
-                        EditText e = (EditText) findViewById(R.id.itemListTextView);
                         CharSequence newchars = numOfResponses + " / 26";
-                        e.setText(newchars);
                         Thread.sleep(1000);
                         timer++;
                     } catch (InterruptedException ex) {
@@ -248,6 +359,7 @@ public class Camera extends AppCompatActivity {
                 //Loops through object results
                 for (String s: visionResultsList)
                 {
+                    System.out.println(s);
                     for (String currentFood: foodList)
                     {
                         if (s.contains(currentFood))
@@ -296,30 +408,41 @@ public class Camera extends AppCompatActivity {
                         }
                     }
                 }
+                Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = new Date();
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                Date added = c.getTime();
+                c.add(Calendar.WEEK_OF_MONTH, 1);
+
+                Date expiryDate=c.getTime();
+                String expiryString=formatter.format(expiryDate);
+                String addedString=formatter.format(added);
 
                 for (String currentResult : endResults)
                 {
-                    //Note:
-                    //Add current result to UI
-
-                    //Note:
-                    //Used to display on screen in text view, you can remove this
-                    data += currentResult + "\n";
+                    itemList.add(new Items(currentResult,expiryString,"1",addedString));
+                    db.insertFood(currentResult,expiryString,1);
                 }
 
-                //Note:
-                //Used to display on screen in text view, you can remove this
-                EditText e = (EditText) findViewById(R.id.itemListTextView);
-                CharSequence newchars = e.getText() + data;
-                e.setText(newchars);
-                //End of note
+                Intent i = new Intent(Camera.this, Camera.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                Bundle bundle = new Bundle();
+                bundle.putString("toast", "");
+                i.putExtras(bundle);
+                overridePendingTransition(0,0);
+                startActivity(i);
 
+                finish();
+                overridePendingTransition(0,0);
                 return null;
             }
 
         }.execute();
 
+
         imageFile.delete();
+
     }
 
     void saveImage(String fileName, Bitmap img)
@@ -350,15 +473,10 @@ public class Camera extends AppCompatActivity {
     void detectObjects(FirebaseVisionImage image)
     {
         FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance().getCloudImageLabeler();
-
         labeler.processImage(image)
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
                     @Override
                     public void onSuccess(List<FirebaseVisionImageLabel> labels) {
-                        // Task completed successfully
-                        // ...
-                        //Loops through each object that was recognised
-
                         for (FirebaseVisionImageLabel label: labels) {
                             String text = label.getText();
                             visionResultsList.add(text);
@@ -372,7 +490,6 @@ public class Camera extends AppCompatActivity {
                     public void onFailure(Exception ex) {
                         // Task failed with an exception
                         // ...
-
                         numOfResponses++;
                     }
                 });
@@ -394,9 +511,9 @@ public class Camera extends AppCompatActivity {
                                 // ...
                                 String data = "Text recognition" + firebaseVisionText.getText();
 
-                                EditText e = (EditText) findViewById(R.id.itemListTextView);
-                                CharSequence newchars = e.getText() + data;
-                                e.setText(newchars);
+                                //EditText e = (EditText) findViewById(R.id.itemListTextView);
+                               // CharSequence newchars = e.getText() + data;
+                                //e.setText(newchars);
 
 
 
@@ -411,9 +528,7 @@ public class Camera extends AppCompatActivity {
                                         // ...
 
                                         String data = "Could not find text:\n\n" + ex.toString();
-                                        EditText e = (EditText) findViewById(R.id.itemListTextView);
-                                        CharSequence newchars = e.getText() + data;
-                                        e.setText(newchars);
+
 
                                     }
                                 });
@@ -477,6 +592,32 @@ public class Camera extends AppCompatActivity {
 
     }
 
+    private ArrayList<Items> getPantry() {
+        ArrayList<Items> itemList = new ArrayList<>();
+        // returns a list of the pantry
+        // use pantryList[x].getVariableName() to get values from the list
+        List<DBPantry> pantryList = db.fetchPantryAll();
+
+        for (DBPantry tempPantry : pantryList) {
+            // adds the new food item to the item list
+            itemList.add(new Items(tempPantry.getName(),tempPantry.getDateExpiry(),Integer.toString(tempPantry.getAmount()), tempPantry.getDateAdded()));
+        }
+
+        return itemList;
+    }
+
+    private void removeItem(String foodName, String dateAdded) {
+        //removes the item from the table, pass food name and dateadded
+        db.deleteFood(foodName, dateAdded);
+
+    }
+
+    public void openDialog() {
+        cameraDialog camDialog = new cameraDialog();
+        camDialog.show(getSupportFragmentManager(),"help");
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
@@ -495,6 +636,14 @@ public class Camera extends AppCompatActivity {
             case R.id.Barcode:
                 Intent intentBarcode = new Intent(this, barcode.class);
                 startActivity(intentBarcode);
+                return true;
+            case R.id.ShoppingList:
+                Intent intentShopping = new Intent(this, ShoppingList.class);
+                startActivity(intentShopping);
+                return true;
+            case R.id.Receipt:
+                Intent intentReceipt = new Intent(this, receipt.class);
+                startActivity(intentReceipt);
                 return true;
             case R.id.Help:
                 Intent intentHelp = new Intent(this, Help.class);

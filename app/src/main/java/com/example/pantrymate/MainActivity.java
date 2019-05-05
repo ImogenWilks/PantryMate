@@ -84,12 +84,19 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent broadcast = PendingIntent.getBroadcast(this,createID(),intent,0);
 
         AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Calendar calender = Calendar.getInstance();
-        calender.set(Calendar.HOUR_OF_DAY,12);
+        Calendar alarmStartTime = Calendar.getInstance();
+        alarmStartTime.set(Calendar.HOUR_OF_DAY,9);
+        alarmStartTime.set(Calendar.MINUTE, 00);
+        alarmStartTime.set(Calendar.SECOND, 0);
+
+        Calendar now = Calendar.getInstance();
 
 
+        if (now.after(alarmStartTime)) {
+            alarmStartTime.add(Calendar.DATE, 1);
+        }
 
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, calender.getTimeInMillis(), AlarmManager.INTERVAL_DAY,broadcast);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, alarmStartTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY,broadcast);
 
     }
 

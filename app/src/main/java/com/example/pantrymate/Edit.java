@@ -151,6 +151,14 @@ public class Edit extends AppCompatActivity  {
                 Intent intentBarcode = new Intent(this, barcode.class);
                 startActivity(intentBarcode);
                 return true;
+            case R.id.ShoppingList:
+                Intent intentShopping = new Intent(this, ShoppingList.class);
+                startActivity(intentShopping);
+                return true;
+            case R.id.Receipt:
+                Intent intentReceipt = new Intent(this, receipt.class);
+                startActivity(intentReceipt);
+                return true;
             case R.id.Help:
                 Intent intentHelp = new Intent(this, Help.class);
                 startActivity(intentHelp);

@@ -1,7 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.pantrymate.MainActivity">
+    tools:context="com.example.pantrymate.MainActivity"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
     <item
         android:id="@+id/Home"
         android:orderInCategory="100"
@@ -10,7 +11,7 @@
     <item
         android:id="@+id/Manual"
         android:orderInCategory="100"
-        android:title="@string/Manual_Entry"
+        android:title="Pantry"
         app:showAsAction="never" />
 
     <item
@@ -21,7 +22,17 @@
     <item
         android:id="@+id/Barcode"
         android:orderInCategory="100"
-        android:title="@string/Barcode"
+        android:title="Barcode"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/ShoppingList"
+        android:orderInCategory="100"
+        android:title="Shopping List"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/Receipt"
+        android:orderInCategory="100"
+        android:title="Receipt"
         app:showAsAction="never" />
     <item
         android:id="@+id/Help"

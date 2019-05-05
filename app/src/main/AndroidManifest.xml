@@ -20,7 +20,8 @@
         <activity
             android:name=".Notification"
             android:label="@string/titlePantry"/>
-        <receiver android:name=".AlarmReceiver">
+        <receiver android:name=".AlarmReceiver" android:enabled="true">
+            android:enabled="
             <intent-filter>
                 <action android:name="push-action.DISPLAY_NOTIFICATION"/>
             </intent-filter>
@@ -29,6 +30,10 @@
             android:name=".receipt"
             android:label="@string/title_activity_receipt"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".partialMatch"
+            android:label="Partial Match"/>
+
         <activity
             android:name=".ShoppingList"
             android:label="@string/title_activity_shopping_list"

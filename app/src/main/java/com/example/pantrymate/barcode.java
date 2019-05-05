@@ -158,8 +158,17 @@ public class barcode extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(barcode.this, editCheck.class);
                 Bundle bundle = new Bundle();
+                Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = new Date();
+                String dateString=formatter.format(date);
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                c.add(Calendar.WEEK_OF_MONTH, 1);
+                Date expiryDate=c.getTime();
+                String expiryString=formatter.format(expiryDate);
+
                 bundle.putString("name","");
-                bundle.putString("expiry","");
+                bundle.putString("expiry",expiryString);
                 bundle.putString("quantity","");
                 bundle.putString("date","");
                 bundle.putInt("Add",1); //adding
@@ -197,6 +206,14 @@ public class barcode extends AppCompatActivity {
             case R.id.Barcode:
                 Intent intentBarcode = new Intent(this, barcode.class);
                 startActivity(intentBarcode);
+                return true;
+            case R.id.ShoppingList:
+                Intent intentShopping = new Intent(this, ShoppingList.class);
+                startActivity(intentShopping);
+                return true;
+            case R.id.Receipt:
+                Intent intentReceipt = new Intent(this, receipt.class);
+                startActivity(intentReceipt);
                 return true;
             case R.id.Help:
                 Intent intentHelp = new Intent(this, Help.class);

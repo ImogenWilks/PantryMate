@@ -130,13 +130,8 @@ public class ShoppingList extends AppCompatActivity {
             public void onSwiped(@NonNull RecyclerView.ViewHolder target, int i) {
                 int position = target.getAdapterPosition();
 
-                //either uncomment these two or the single one, not both
-
-                //Uncomment these two lines to make it move an item and all its quantity over to the pantry
                // db1.transferItemToPantry(ShoppingList.this, itemList.get(position).getText1(),itemList.get(position).getDateAdded());
                 //itemList.remove(position);
-
-                //Uncommend this line to make it only remove one from the quantity.
                 tickOff(itemList.get(position).getText1());
 
 
@@ -411,6 +406,14 @@ public class ShoppingList extends AppCompatActivity {
             case R.id.Barcode:
                 Intent intentBarcode = new Intent(this, barcode.class);
                 startActivity(intentBarcode);
+                return true;
+            case R.id.ShoppingList:
+                Intent intentShopping = new Intent(this, ShoppingList.class);
+                startActivity(intentShopping);
+                return true;
+            case R.id.Receipt:
+                Intent intentReceipt = new Intent(this, receipt.class);
+                startActivity(intentReceipt);
                 return true;
             case R.id.Help:
                 Intent intentHelp = new Intent(this, Help.class);

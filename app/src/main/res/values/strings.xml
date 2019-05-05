@@ -43,4 +43,5 @@
     <string name="barcodeExplain">To scan a barcode press the \'scan barcode\' button and take a clear picture of your barcode. You will then get a pop up with the name of your item. You can re-try if this is incorrect or manually add it for barcode information that can not be found.</string>
     <string name="notificationTitle">Food Expiring Soon</string>
     <string name="titlePantry">Pantry Items</string>
+    <string name="addWithExp">To add an item click the + button and fill in the required details.</string>
 </resources>

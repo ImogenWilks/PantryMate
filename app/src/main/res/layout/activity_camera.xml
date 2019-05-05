@@ -8,21 +8,71 @@
 
     <include layout="@layout/toolbar"/>
 
-    <Button
-        android:id="@+id/captureButton"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/topLayout"
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="200dp"
-        android:layout_marginTop="700dp"
-        android:onClick="onCapturePressed"
-        android:text="Capture" />
+        android:padding="15dp"
+        >
 
-    <EditText
-        android:id="@+id/itemListTextView"
-        android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/captureButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_format"
+            android:text="Capture Image"
+            android:onClick="onCapturePressed"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_centerInParent="true"/>
+
+        <Button
+            android:id="@+id/addItem"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_format"
+            android:text="+"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp"
+            android:layout_alignParentLeft="true"/>
+        <Button
+            android:id="@+id/instructions"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="\?"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp"
+            android:background="@drawable/button_format"
+            android:layout_alignParentRight="true"
+
+            />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ListRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="470dp"
+        android:layout_below="@+id/topLayout"
+        android:clickable="true"
+        android:longClickable="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:scrollbars="vertical"
+        />
+
+    <Button
+        android:id="@+id/addPantry"
+        android:layout_below="@id/ListRecyclerView"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:ems="10"
-        android:inputType="textMultiLine" />
+        android:text="Add items to pantry"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:background="@drawable/button_format"
+        android:layout_centerInParent="true"
+
+        />
 
 </RelativeLayout>

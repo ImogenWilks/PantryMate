@@ -74,7 +74,7 @@ public class receipt extends AppCompatActivity {
     private RecyclerView.LayoutManager nlayoutManager;
     private DatabaseHelper db1,db;
     ArrayList<Items> itemList = new ArrayList<>();
-    Button addAll,helpBut;
+    Button addAll,helpBut,addBut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class receipt extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         db1 = new DatabaseHelper(this, "receipt.db");
-        db1 = new DatabaseHelper(this, "pantry.db");
+        db = new DatabaseHelper(this, "pantry.db");
 
         itemList = getPantry();
 
@@ -94,6 +94,25 @@ public class receipt extends AppCompatActivity {
         nAdapter = new Adapter(itemList);
         nRecyclerView.setLayoutManager(nlayoutManager);
         nRecyclerView.setAdapter(nAdapter);
+
+        nAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                Intent i = new Intent(receipt.this, editCheck.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name", itemList.get(position).getText1());
+                bundle.putString("expiry", itemList.get(position).getText2());
+                bundle.putString("quantity", itemList.get(position).getText3());
+                bundle.putString("date", itemList.get(position).getDateAdded());
+                bundle.putInt("Add", 2);
+                bundle.putInt("pantry",4);
+                bundle.putString("activity","receipt");
+                i.putExtras(bundle);
+                startActivity(i);
+            }
+
+        });
 
         addAll = (Button) findViewById(R.id.addPantry);
         addAll.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +134,36 @@ public class receipt extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openDialog();
+
+            }
+        });
+
+        addBut = (Button) findViewById(R.id.addItem);
+        addBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = new Date();
+                String dateString=formatter.format(date);
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                c.add(Calendar.WEEK_OF_MONTH, 1);
+                Date expiryDate=c.getTime();
+                String expiryString=formatter.format(expiryDate);
+
+
+                Intent i = new Intent(receipt.this, editCheck.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name","");
+                bundle.putString("expiry",expiryString);
+                bundle.putString("quantity","");
+                bundle.putString("date","");
+                bundle.putInt("Add",1);
+                bundle.putInt("pantry",4);
+                bundle.putString("activity","receipt");
+                i.putExtras(bundle);
+                startActivity(i);
+
 
             }
         });
@@ -308,6 +357,14 @@ public class receipt extends AppCompatActivity {
             case R.id.Barcode:
                 Intent intentBarcode = new Intent(this, barcode.class);
                 startActivity(intentBarcode);
+                return true;
+            case R.id.ShoppingList:
+                Intent intentShopping = new Intent(this, ShoppingList.class);
+                startActivity(intentShopping);
+                return true;
+            case R.id.Receipt:
+                Intent intentReceipt = new Intent(this, receipt.class);
+                startActivity(intentReceipt);
                 return true;
             case R.id.Help:
                 Intent intentHelp = new Intent(this, Help.class);
