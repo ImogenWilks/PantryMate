@@ -21,7 +21,6 @@
             android:name=".Notification"
             android:label="@string/titlePantry"/>
         <receiver android:name=".AlarmReceiver" android:enabled="true">
-            android:enabled="
             <intent-filter>
                 <action android:name="push-action.DISPLAY_NOTIFICATION"/>
             </intent-filter>
