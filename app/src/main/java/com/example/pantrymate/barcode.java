@@ -37,7 +37,7 @@ public class barcode extends AppCompatActivity {
     private RecyclerView nRecyclerView;
     private Adapter nAdapter;
     private RecyclerView.LayoutManager nlayoutManager;
-    private DatabaseHelper db1,db;
+    private DatabaseHelper db1, db;
     ArrayList<Items> itemList = new ArrayList<>();
 
 
@@ -51,34 +51,34 @@ public class barcode extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         db1 = new DatabaseHelper(this, "shopping.db");
-        db = new DatabaseHelper(this,"pantry.db");
+        db = new DatabaseHelper(this, "pantry.db");
         itemList = getPantry();
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle!=null){
+        if (bundle != null) {
             String name = bundle.getString("name");
-           //expiry and date added
+            //expiry and date added
             Format formatter = new SimpleDateFormat("dd/MM/yyyy");
             Date date = new Date();
-            String dateString=formatter.format(date);
+            String dateString = formatter.format(date);
 
 
             Calendar c = Calendar.getInstance();
             c.setTime(date);
             c.add(Calendar.WEEK_OF_MONTH, 1);
 
-            Date expiryDate=c.getTime();
-            String expiryString=formatter.format(expiryDate);
+            Date expiryDate = c.getTime();
+            String expiryString = formatter.format(expiryDate);
 
             Intent i = new Intent(barcode.this, editCheck.class);
             Bundle bundleCheck = new Bundle();
-            bundleCheck.putString("name",name);
-            bundleCheck.putString("expiry",expiryString);
-            bundleCheck.putString("quantity","1");
-            bundleCheck.putString("date",dateString);
-            bundleCheck.putInt("Add",1); //adding
-            bundleCheck.putInt("pantry",2);
-            bundleCheck.putString("activity","barcode");
+            bundleCheck.putString("name", name);
+            bundleCheck.putString("expiry", expiryString);
+            bundleCheck.putString("quantity", "1");
+            bundleCheck.putString("date", dateString);
+            bundleCheck.putInt("Add", 1); //adding
+            bundleCheck.putInt("pantry", 2);
+            bundleCheck.putString("activity", "barcode");
             i.putExtras(bundleCheck);
             startActivity(i);
 
@@ -91,7 +91,7 @@ public class barcode extends AppCompatActivity {
         nAdapter = new Adapter(itemList);
         nRecyclerView.setLayoutManager(nlayoutManager);
         nRecyclerView.setAdapter(nAdapter);
-        Button addbut,addAll,helpBut;
+        Button addbut, addAll, helpBut;
 
         nAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
             @Override
@@ -104,15 +104,15 @@ public class barcode extends AppCompatActivity {
                 bundle.putString("quantity", itemList.get(position).getText3());
                 bundle.putString("date", itemList.get(position).getDateAdded());
                 bundle.putInt("Add", 2); //updating;
-                bundle.putInt("pantry",2);
-                bundle.putString("activity","barcode");
+                bundle.putInt("pantry", 2);
+                bundle.putString("activity", "barcode");
                 i.putExtras(bundle);
                 startActivity(i);
             }
 
         });
 
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT ) {
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
                 return false;
@@ -121,7 +121,7 @@ public class barcode extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder target, int i) {
                 int position = target.getAdapterPosition();
-                removeItem(itemList.get(position).getText1(),itemList.get(position).getDateAdded());
+                removeItem(itemList.get(position).getText1(), itemList.get(position).getDateAdded());
                 itemList.remove(position);
                 nAdapter.notifyDataSetChanged();
 
@@ -133,8 +133,8 @@ public class barcode extends AppCompatActivity {
         addAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Items tempItem : itemList){
-                    db.insertFood(tempItem.getText1(),tempItem.getText2(),Integer.parseInt(tempItem.getText3()));
+                for (Items tempItem : itemList) {
+                        increaseQuantity(tempItem.getText1(),tempItem.getText2(),Integer.parseInt(tempItem.getText3()));
                 }
                 itemList.clear();
                 nAdapter.notifyDataSetChanged();
@@ -143,7 +143,7 @@ public class barcode extends AppCompatActivity {
             }
         });
 
-        helpBut= (Button) findViewById(R.id.instructions);
+        helpBut = (Button) findViewById(R.id.instructions);
         helpBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,20 +160,20 @@ public class barcode extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 Format formatter = new SimpleDateFormat("dd/MM/yyyy");
                 Date date = new Date();
-                String dateString=formatter.format(date);
+                String dateString = formatter.format(date);
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
                 c.add(Calendar.WEEK_OF_MONTH, 1);
-                Date expiryDate=c.getTime();
-                String expiryString=formatter.format(expiryDate);
+                Date expiryDate = c.getTime();
+                String expiryString = formatter.format(expiryDate);
 
-                bundle.putString("name","");
-                bundle.putString("expiry",expiryString);
-                bundle.putString("quantity","");
-                bundle.putString("date","");
-                bundle.putInt("Add",1); //adding
-                bundle.putInt("pantry",2);
-                bundle.putString("activity","barcode");
+                bundle.putString("name", "");
+                bundle.putString("expiry", expiryString);
+                bundle.putString("quantity", "");
+                bundle.putString("date", "");
+                bundle.putInt("Add", 1); //adding
+                bundle.putInt("pantry", 2);
+                bundle.putString("activity", "barcode");
                 i.putExtras(bundle);
                 startActivity(i);
 
@@ -188,8 +188,9 @@ public class barcode extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.Home:
                 Intent intentHome = new Intent(this, MainActivity.class);
@@ -232,7 +233,7 @@ public class barcode extends AppCompatActivity {
 
         for (DBPantry tempPantry : pantryList) {
             // adds the new food item to the item list
-            itemList.add(new Items(tempPantry.getName(),tempPantry.getDateExpiry(),Integer.toString(tempPantry.getAmount()), tempPantry.getDateAdded()));
+            itemList.add(new Items(tempPantry.getName(), tempPantry.getDateExpiry(), Integer.toString(tempPantry.getAmount()), tempPantry.getDateAdded()));
         }
 
         return itemList;
@@ -257,7 +258,32 @@ public class barcode extends AppCompatActivity {
 
     public void openDialog() {
         barcodeDialog addDialogue = new barcodeDialog();
-        addDialogue.show(getSupportFragmentManager(),"help");
+        addDialogue.show(getSupportFragmentManager(), "help");
 
+    }
+
+    public boolean increaseQuantity(String foodName, String expiry, int amount) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String dateString = formatter.format(date);
+        List<DBPantry> pantryList;
+        boolean found = false;
+
+        pantryList = db.fetchPantryAll();
+
+        for (DBPantry tempPantry : pantryList) {
+            if (tempPantry.getName().equals(foodName) && tempPantry.getDateExpiry().substring(0, 10).equals(expiry)) {
+                DBPantry tempP = new DBPantry();
+                tempP.setName(foodName);
+                tempP.setDateExpiry(expiry);
+                tempP.setAmount(tempPantry.getAmount() + amount);
+                db.updateFood(tempP, foodName, tempPantry.getDateAdded());
+                found = true;
+            }
+        }
+        if (!found) {
+            db.insertFood(foodName, expiry, amount);
+        }
+        return found;
     }
 }

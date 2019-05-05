@@ -104,17 +104,58 @@
                 android:text="@string/helpBarcode"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:gravity="center"/>
+
             <TextView
-                android:id="@+id/contactTitle"
+                android:id="@+id/receiptTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="CONTACT US"
+                android:text="RECEIPT"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
                 android:textColor="@color/colorPrimaryDark"
                 />
+            <TextView
+                android:id="@+id/ReceiptInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scan your receipt by pressing the scan button and then cropping around the items names (excluding their quantities). The app will then give you a list based off of your receipt."
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/shoppingTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="SHOPPING LIST"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                />
+            <TextView
+                android:id="@+id/shoppingInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shopTickExplain"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"/>
+
+            <TextView
+            android:id="@+id/contactTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="CONTACT US"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textColor="@color/colorPrimaryDark"
+            />
             <TextView
                 android:id="@+id/helpContact"
                 android:layout_width="match_parent"
@@ -122,6 +163,8 @@
                 android:text="@string/helpContact"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:gravity="center"/>
+
+
 
         </LinearLayout>
     </ScrollView>

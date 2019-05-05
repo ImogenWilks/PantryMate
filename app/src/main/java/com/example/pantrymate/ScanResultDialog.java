@@ -77,7 +77,6 @@ public class ScanResultDialog extends AppCompatDialog {
         //noinspection ConstantConditions
         findViewById(R.id.copy).setOnClickListener(v -> {
             //noinspection ConstantConditions
-            System.out.println("RESULT S HERE    "+parsed.getText());
             String name = parsed.getText().toString();
 
             if (isShopping)

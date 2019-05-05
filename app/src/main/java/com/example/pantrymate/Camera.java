@@ -188,7 +188,7 @@ public class Camera extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 for (Items tempItem : itemList){
-                    db1.insertFood(tempItem.getText1(),tempItem.getText2(),Integer.parseInt(tempItem.getText3()));
+                    increaseQuantity(tempItem.getText1(),tempItem.getText2(),Integer.parseInt(tempItem.getText3()));
                 }
 
                 itemList.clear();
@@ -359,7 +359,6 @@ public class Camera extends AppCompatActivity {
                 //Loops through object results
                 for (String s: visionResultsList)
                 {
-                    System.out.println(s);
                     for (String currentFood: foodList)
                     {
                         if (s.contains(currentFood))
@@ -610,6 +609,31 @@ public class Camera extends AppCompatActivity {
         //removes the item from the table, pass food name and dateadded
         db.deleteFood(foodName, dateAdded);
 
+    }
+
+    public boolean increaseQuantity(String foodName, String expiry, int amount) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String dateString = formatter.format(date);
+        List<DBPantry> pantryList;
+        boolean found = false;
+
+        pantryList = db1.fetchPantryAll();
+
+        for (DBPantry tempPantry : pantryList) {
+            if (tempPantry.getName().equals(foodName) && tempPantry.getDateExpiry().substring(0, 10).equals(expiry)) {
+                DBPantry tempP = new DBPantry();
+                tempP.setName(foodName);
+                tempP.setDateExpiry(expiry);
+                tempP.setAmount(tempPantry.getAmount() + amount);
+                db1.updateFood(tempP, foodName, tempPantry.getDateAdded());
+                found = true;
+            }
+        }
+        if (!found) {
+            db1.insertFood(foodName, expiry, amount);
+        }
+        return found;
     }
 
     public void openDialog() {

@@ -14,10 +14,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import database.DBPantry;
@@ -214,12 +217,40 @@ public class editCheck extends AppCompatActivity {
     }
 
     private void addItem(String foodName, String expiry, int amount,int pantry) {
-        // inserts an item into the table
-        if (pantry==1){db.insertFood(foodName,expiry,amount);}
+        boolean found = increaseQuantity(foodName,expiry,amount,pantry);
+
+        if (!found){
+        if (pantry==1) { db.insertFood(foodName,expiry,amount);}
         else if (pantry==2){ db1.insertFood(foodName, expiry, amount);}
         else if (pantry==3){db2.insertFood(foodName,expiry,amount);}
         else if (pantry==4) {db3.insertFood(foodName,expiry,amount);}
         else{db4.insertFood(foodName,expiry,amount);}
+        }
+    }
+
+
+    public boolean increaseQuantity(String foodName, String expiry, int amount,int pantry) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String dateString=formatter.format(date);
+        List<DBPantry> pantryList;
+        boolean found = false;
+
+        if (pantry==1){pantryList = db.fetchPantryAll();}
+        else if (pantry==2){pantryList =db1.fetchPantryAll();}
+        else if (pantry==3){pantryList =db2.fetchPantryAll();}
+        else if (pantry==4){pantryList =db3.fetchPantryAll();}
+        else{pantryList=db4.fetchPantryAll();}
+
+        for (DBPantry tempPantry : pantryList) {
+            if (tempPantry.getName().equals(foodName) && tempPantry.getDateExpiry().substring(0,10).equals(expiry)) {
+                updateFood(foodName, expiry, tempPantry.getAmount() + amount, foodName, tempPantry.getDateAdded(), pantry);
+                found=true;
+            }
+        }
+        return found;
+
+
     }
 
     @Override

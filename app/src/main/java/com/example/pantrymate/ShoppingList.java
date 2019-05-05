@@ -278,7 +278,8 @@ public class ShoppingList extends AppCompatActivity {
             tempPantry.setDateExpiry("N/A");
             tempPantry.setDateAdded(dateAdded);
             db1.updateFood(tempPantry,foodName,dateAdded);
-            db.insertFood(foodName,expiryString,1);
+            increaseQuantity(foodName,expiryString,1);
+
 
             Items tempItem=itemList.get(index);
             String storeQuantity=tempItem.getText3();
@@ -297,7 +298,7 @@ public class ShoppingList extends AppCompatActivity {
             itemList.remove(index);
             db1.deleteFood(foodName, dateAdded);
             nAdapter.notifyDataSetChanged();
-            db.insertFood(foodName, expiryString, intQuantity);
+            increaseQuantity(foodName,expiryString, intQuantity);
         }
 
     }
@@ -308,7 +309,6 @@ public class ShoppingList extends AppCompatActivity {
         int highest = 0;
         for (int i = 0; i < matchCount.size(); i++)
         {
-            System.out.println(matchCount.get(i));
             if (matchCount.get(i) != 0 && matchCount.get(i) > highest)
             {
                 bestMatches.clear();
@@ -337,8 +337,6 @@ public class ShoppingList extends AppCompatActivity {
         {
             while (value.hasNext())
             {
-                System.out.println("BEST MATCH: " + itemList.get(bestMatches.get(item)).getText1());
-                System.out.println("WITH MATCHES:  " + matchCount.get(bestMatches.get(item)));
                 items[pos] = itemList.get(bestMatches.get(item)).getText1();
                 items[pos + 1] = itemList.get(bestMatches.get(item)).getText2();
                 items[pos + 2] = itemList.get(bestMatches.get(item)).getText3();
@@ -359,7 +357,6 @@ public class ShoppingList extends AppCompatActivity {
 
         else
         {
-            System.out.println("NO MATCHES FOUND");
             openDialogNoMatch();
         }
 
@@ -380,6 +377,31 @@ public class ShoppingList extends AppCompatActivity {
         matchesDialogue.setArguments(args);
         matchesDialogue.show(getSupportFragmentManager(),"No Matches");
 
+    }
+
+    public boolean increaseQuantity(String foodName, String expiry, int amount) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String dateString = formatter.format(date);
+        List<DBPantry> pantryList;
+        boolean found = false;
+
+        pantryList = db.fetchPantryAll();
+
+        for (DBPantry tempPantry : pantryList) {
+            if (tempPantry.getName().equals(foodName) && tempPantry.getDateExpiry().substring(0, 10).equals(expiry)) {
+                DBPantry tempP = new DBPantry();
+                tempP.setName(foodName);
+                tempP.setDateExpiry(expiry);
+                tempP.setAmount(tempPantry.getAmount() + amount);
+                db.updateFood(tempP, foodName, tempPantry.getDateAdded());
+                found = true;
+            }
+        }
+        if (!found) {
+            db.insertFood(foodName, expiry, amount);
+        }
+        return found;
     }
 
     @Override
